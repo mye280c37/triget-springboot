@@ -44,3 +44,5 @@ bin/
 
 ### Config ###
 .config
+application.yml
+application.properties
