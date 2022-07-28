@@ -15,6 +15,7 @@ repositories {
 
 dependencies {
     implementation ('org.springframework.boot:spring-boot-starter-web')
+    implementation('org.springframework.boot:spring-boot-starter-data-mongodb')
     implementation ('org.springframework.boot:spring-boot-starter-data-mongodb-reactive')
     developmentOnly ('org.springframework.boot:spring-boot-devtools')
     compileOnly ('org.projectlombok:lombok')
@@ -26,6 +27,7 @@ dependencies {
     }
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
     testRuntimeOnly("org.junit.vintage:junit-vintage-engine")
+    testImplementation 'io.projectreactor:reactor-test'
 }
 
 tasks.named('test') {

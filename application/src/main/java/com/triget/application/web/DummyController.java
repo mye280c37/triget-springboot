@@ -51,7 +51,7 @@ public class DummyController {
     }
 
     @PostMapping("/dummy")
-    public Dummy save(@RequestBody DummySaveDto dto) { // {"title":"제목3","content":"내용3"}
+    public Dummy save(@RequestBody DummySaveDto dto) {
         Dummy dummyEntity = dummyRepository.save(dto.toEntity());
 
         return dummyEntity; // MessageConverter 발동 -> 자바오브제그를 Json 변환해서 응답함.
