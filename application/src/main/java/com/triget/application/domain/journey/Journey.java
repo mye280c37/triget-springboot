@@ -9,6 +9,7 @@ import java.util.Date;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 
@@ -20,20 +21,32 @@ public class Journey {
     private String id;
     private String place;
     private JourneyTheme theme;
+    @Field("people_num")
     private int peopleNum;
     @DateTimeFormat(iso = ISO.DATE)
+    @Field("departure_date")
     private Date departureDateTime;
     @DateTimeFormat(iso = ISO.DATE)
+    @Field("arrival_date")
     private Date arrivalDateTime;
+    @Field("departure_airport")
     private String departureAirport;
     private int budget;
+    @Field("flights_prior")
     private int flightsPriority;
+    @Field("accommodations_prior")
     private int accommodationsPriority;
+    @Field("restaurants_prior")
     private int restaurantsPriority;
+    @Field("attractions_prior")
     private int attractionsPriority;
+    @Field("flights_budget")
     private int flightsBudget;
+    @Field("accommodations_budget")
     private int accommodationsBudget;
+    @Field("restaurants_budget")
     private int restaurantsBudget;
+    @Field("attractions_budget")
     private int attractionsBudget;
 
     @Builder
