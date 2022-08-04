@@ -1,16 +1,17 @@
-package com.triget.application.domain.product.attraction;
+package com.triget.application.domain.attraction;
 
 import lombok.Builder;
 import lombok.Data;
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @Document(collection = "attraction")
-public class AttractionProduct {
+public class Attraction {
     @Id
-    private String _id;
+    private ObjectId _id;
     @Field("tripadvisor_id")
     private String tripadvisorId;
     private String name;
@@ -38,10 +39,10 @@ public class AttractionProduct {
     private String neighbors;
 
     @Builder
-    public AttractionProduct(String _id, String tripadvisorId, String name, String thumbnail, String subcategory,
-                             float longitude, float latitude, String city, String state, String country,
-                             String address, int price, String currencyCode, int estimatedTime, float rating,
-                             int popularity, String detailUrl, String productWebsite, String weekdayHours, String neighbors)
+    public Attraction(ObjectId _id, String tripadvisorId, String name, String thumbnail, String subcategory,
+                      float longitude, float latitude, String city, String state, String country,
+                      String address, int price, String currencyCode, int estimatedTime, float rating,
+                      int popularity, String detailUrl, String productWebsite, String weekdayHours, String neighbors)
     {
         this._id = _id;
         this.tripadvisorId = tripadvisorId;
