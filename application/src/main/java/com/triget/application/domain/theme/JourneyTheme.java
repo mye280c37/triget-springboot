@@ -2,6 +2,7 @@ package com.triget.application.domain.theme;
 
 import lombok.Data;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -11,7 +12,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 public class JourneyTheme {
 
     @Id
-    private String _id;
+    private ObjectId _id;
     @Field("korean_name")
     private String koreanName;
     @Field("english_name")

@@ -15,6 +15,6 @@ public class ProductListService {
     @Transactional
     public String save(ProductListRequestDto dto){
         JourneyTheme journeyTheme = journeyThemeRepository.findByKoreanName(dto.getTheme()).get(0);
-        return journeyRepository.save(dto.toEntity(journeyTheme)).getId();
+        return journeyRepository.save(dto.toEntity(journeyTheme)).getId().toString();
     }
 }

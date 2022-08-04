@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.util.Date;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
@@ -18,7 +19,7 @@ import org.springframework.format.annotation.DateTimeFormat.ISO;
 public class Journey {
 
     @Id
-    private String id;
+    private ObjectId id;
     private String place;
     private JourneyTheme theme;
     @Field("people_num")

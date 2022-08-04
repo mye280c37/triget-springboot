@@ -2,6 +2,7 @@ package com.triget.application.domain.journey;
 
 import com.triget.application.domain.theme.JourneyTheme;
 import com.triget.application.domain.theme.JourneyThemeRepository;
+import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -21,7 +22,7 @@ public class JourneyRepositoryTest {
     JourneyRepository journeyRepository;
     @Autowired
     JourneyThemeRepository journeyThemeRepository;
-    private String id;
+    private ObjectId id;
 
     @AfterAll
     public void deleteOne() {
