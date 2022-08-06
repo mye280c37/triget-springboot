@@ -23,7 +23,7 @@ public class Accommodation {
     private String city;
     private String district;
     private String address;
-    private int price;
+    private float price;
     @Field("currency_code")
     private String currencyCode;
     private float rating;
@@ -34,7 +34,7 @@ public class Accommodation {
     @Builder
     public Accommodation(ObjectId _id, String bookingsId, String name, String thumbnail, String subcategory,
                          float longitude, float latitude, String city, String district, String address,
-                         int price, String currencyCode, float rating, int popularity, String detailUrl)
+                         float price, String currencyCode, float rating, int popularity, String detailUrl)
     {
         this._id = _id;
         this.bookingsId = bookingsId;

@@ -1,5 +1,6 @@
 package com.triget.application.domain.journey;
 
+import com.mongodb.lang.Nullable;
 import com.triget.application.domain.theme.JourneyTheme;
 
 import lombok.Builder;
@@ -21,6 +22,7 @@ public class Journey {
     @Id
     private ObjectId id;
     private String place;
+    @Nullable
     private JourneyTheme theme;
     @Field("people_num")
     private int peopleNum;
@@ -42,19 +44,19 @@ public class Journey {
     @Field("attractions_prior")
     private int attractionsPriority;
     @Field("flights_budget")
-    private int flightsBudget;
+    private float flightsBudget;
     @Field("accommodations_budget")
-    private int accommodationsBudget;
+    private float accommodationsBudget;
     @Field("restaurants_budget")
-    private int restaurantsBudget;
+    private float restaurantsBudget;
     @Field("attractions_budget")
-    private int attractionsBudget;
+    private float attractionsBudget;
 
     @Builder
     public Journey(String place, JourneyTheme theme, int peopleNum, Date departureDateTime,
                    Date arrivalDateTime, String departureAirport, int budget, int flightsPriority,
                    int accommodationsPriority, int restaurantsPriority, int attractionsPriority,
-                   int flightsBudget, int accommodationsBudget, int restaurantsBudget, int attractionsBudget){
+                   float flightsBudget, float accommodationsBudget, float restaurantsBudget, float attractionsBudget){
         this.place = place;
         this.theme = theme;
         this.peopleNum = peopleNum;

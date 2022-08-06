@@ -23,11 +23,6 @@ public class Attraction {
     private String state;
     private String country;
     private String address;
-    private int price;
-    @Field("currency_code")
-    private String currencyCode;
-    @Field("estimated_time")
-    private int estimatedTime;
     private float rating;
     private int popularity;
     @Field("detail_url")
@@ -41,8 +36,8 @@ public class Attraction {
     @Builder
     public Attraction(ObjectId _id, String tripadvisorId, String name, String thumbnail, String subcategory,
                       float longitude, float latitude, String city, String state, String country,
-                      String address, int price, String currencyCode, int estimatedTime, float rating,
-                      int popularity, String detailUrl, String productWebsite, String weekdayHours, String neighbors)
+                      String address, float rating, int popularity, String detailUrl, String productWebsite,
+                      String weekdayHours, String neighbors)
     {
         this._id = _id;
         this.tripadvisorId = tripadvisorId;
@@ -55,9 +50,6 @@ public class Attraction {
         this.state = state;
         this.country = country;
         this.address = address;
-        this.price = price;
-        this.currencyCode = currencyCode;
-        this.estimatedTime = estimatedTime;
         this.rating = rating;
         this.popularity = popularity;
         this.detailUrl = detailUrl;
