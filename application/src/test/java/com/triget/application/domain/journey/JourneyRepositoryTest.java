@@ -32,7 +32,7 @@ public class JourneyRepositoryTest {
     @Test
     public void create_journey() {
         // given
-        JourneyTheme journeyTheme = journeyThemeRepository.findByKoreanName("테마").get(0);
+        JourneyTheme journeyTheme = journeyThemeRepository.findByKoreanName("테마").orElse(null);
 
         Date today = new Date();
         //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -55,7 +55,7 @@ public class JourneyRepositoryTest {
                 .build()).getId();
 
         //when
-        Journey journey = journeyRepository.findById(this.id).get();
+        Journey journey = journeyRepository.findById(this.id).orElse(null);
 
         //then
         System.out.print("\n===============execution result======================\n");
