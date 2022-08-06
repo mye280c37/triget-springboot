@@ -1,4 +1,4 @@
-package com.triget.application.domain.accommodation;
+package com.triget.application.domain.restaurant;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -13,28 +13,26 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AccommodationRepositoryTest {
+public class RestaurantRepositoryTest {
 
     @Autowired
-    AccommodationRepository accommodationRepository;
+    private RestaurantRepository restaurantRepository;
 
     @Test
-    public void testCityAndPriceBetween() {
+    public void testFindAllByCity() {
         String city = "Tokyo";
-        float priceFrom = 9700;
-        float priceTo = 12000;
         PageRequest pageRequest = PageRequest.of(
                 0,
                 10,
                 Sort.by("rating").descending().and(Sort.by("popularity").descending())
         );
 
-        Page<Accommodation> accommodationPage = accommodationRepository.findByCityAndPriceBetween(city, priceFrom, priceTo, pageRequest);
-        int pageSize = accommodationPage.getNumberOfElements();
+        Page<Restaurant> restaurantPage = restaurantRepository.findAllByCity(city, pageRequest);
+        int pageSize = restaurantPage.getNumberOfElements();
 
         System.out.printf("\n\nThe Number of Elements: %d\n\n", pageSize);
-        for(Accommodation item : accommodationPage){
-            System.out.printf("price: %5.3f, rating: %f, popularity: %d\n", item.getPrice(), item.getRating(), item.getPopularity());
+        for(Restaurant item : restaurantPage){
+            System.out.printf("name: %s, rating: %f, popularity: %d\n", item.getName(), item.getRating(), item.getPopularity());
         }
 
     }
