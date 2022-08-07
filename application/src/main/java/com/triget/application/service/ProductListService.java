@@ -1,20 +1,28 @@
 package com.triget.application.service;
 
-import com.triget.application.domain.journey.JourneyRepository;
-import com.triget.application.domain.theme.JourneyTheme;
-import com.triget.application.domain.theme.JourneyThemeRepository;
-import com.triget.application.web.dto.ProductListRequestDto;
-import org.springframework.stereotype.Service;
+import com.triget.application.domain.accommodation.Accommodation;
+import com.triget.application.domain.attraction.Attraction;
+import com.triget.application.domain.entireflights.EntireFlights;
+import com.triget.application.domain.restaurant.Restaurant;
+import com.triget.application.web.dto.EntireProductListRequestDto;
+import com.triget.application.web.dto.EntireProductListResponseDto;
+import org.bson.types.ObjectId;
+import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
-@Service
-public class ProductListService {
-    private JourneyRepository journeyRepository;
-    private JourneyThemeRepository journeyThemeRepository;
+import java.text.ParseException;
 
+public interface ProductListService {
     @Transactional
-    public String save(ProductListRequestDto dto){
-        JourneyTheme journeyTheme = journeyThemeRepository.findByKoreanName(dto.getTheme()).get(0);
-        return journeyRepository.save(dto.toEntity(journeyTheme)).getId().toString();
-    }
+    public ObjectId saveRequestDto(EntireProductListRequestDto dto) throws ParseException, NullPointerException;
+    @Transactional(readOnly = true)
+    public EntireProductListResponseDto setResponseDto(ObjectId journeyId);
+    @Transactional(readOnly = true)
+    public Page<EntireFlights> findFlights(ObjectId journeyId, int page);
+    @Transactional(readOnly = true)
+    public Page<Accommodation> findAccommodations(ObjectId journeyId, int page);
+    @Transactional(readOnly = true)
+    public Page<Restaurant> findRestaurants(ObjectId journeyId, int page);
+    @Transactional(readOnly = true)
+    public Page<Attraction> findAttractions(ObjectId journeyId, int page);
 }
