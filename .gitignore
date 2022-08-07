@@ -46,3 +46,4 @@ bin/
 .config
 application.yml
 application.properties
+application-API-KEY.properties
