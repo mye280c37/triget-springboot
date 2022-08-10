@@ -10,6 +10,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.util.List;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -37,5 +39,20 @@ public class AccommodationRepositoryTest {
             System.out.printf("price: %5.3f, rating: %f, popularity: %d\n", item.getPrice(), item.getRating(), item.getPopularity());
         }
 
+    }
+
+    private Sort sortByPrice() {
+        return Sort.by(Sort.DEFAULT_DIRECTION, "price");
+    }
+
+    @Test
+    public void testFindAllByCity() {
+        String city = "Tokyo";
+        List<Accommodation> accommodationList = accommodationRepository.findAllByCity(
+                city,
+                sortByPrice());
+        for(Accommodation item : accommodationList){
+            System.out.printf("name: %s, rating: %f, popularity: %d\n", item.getName(), item.getRating(), item.getPopularity());
+        }
     }
 }
