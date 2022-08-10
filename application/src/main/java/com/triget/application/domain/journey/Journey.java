@@ -26,12 +26,10 @@ public class Journey {
     private JourneyTheme theme;
     @Field("people_num")
     private int peopleNum;
-    @DateTimeFormat(iso = ISO.DATE)
     @Field("departure_date")
-    private Date departureDateTime;
-    @DateTimeFormat(iso = ISO.DATE)
+    private String departureDate;
     @Field("arrival_date")
-    private Date arrivalDateTime;
+    private String arrivalDate;
     @Field("departure_airport")
     private String departureAirport;
     private int budget;
@@ -53,15 +51,15 @@ public class Journey {
     private float attractionsBudget;
 
     @Builder
-    public Journey(String place, JourneyTheme theme, int peopleNum, Date departureDateTime,
-                   Date arrivalDateTime, String departureAirport, int budget, int flightsPriority,
+    public Journey(String place, JourneyTheme theme, int peopleNum, String departureDate,
+                   String arrivalDate, String departureAirport, int budget, int flightsPriority,
                    int accommodationsPriority, int restaurantsPriority, int attractionsPriority,
                    float flightsBudget, float accommodationsBudget, float restaurantsBudget, float attractionsBudget){
         this.place = place;
         this.theme = theme;
         this.peopleNum = peopleNum;
-        this.departureDateTime = departureDateTime;
-        this.arrivalDateTime = arrivalDateTime;
+        this.departureDate = departureDate;
+        this.arrivalDate = arrivalDate;
         this.departureAirport = departureAirport;
         this.budget = budget;
         this.flightsPriority = flightsPriority;
