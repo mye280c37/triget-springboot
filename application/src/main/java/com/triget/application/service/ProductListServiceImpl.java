@@ -52,8 +52,6 @@ public class ProductListServiceImpl implements ProductListService {
     @Override
     public ObjectId saveRequestDto(EntireProductListRequestDto dto) throws ParseException, NullPointerException {
         JourneyTheme journeyTheme = journeyThemeRepository.findByKoreanName(dto.getTheme()).orElse(null);
-        System.out.print("테마");
-        System.out.print(journeyThemeRepository.findByKoreanName("테마"));
         return journeyRepository.save(dto.toEntity(journeyTheme)).getId();
     }
 
@@ -82,9 +80,9 @@ public class ProductListServiceImpl implements ProductListService {
         if (minFlightsPrice < flightsBudget-margin){
             flightsBudget = minFlightsPrice+margin;
             remainBudget -= flightsBudget;
-            accommodationsBudget = (float) (accommodationsPrior/priorSum)*remainBudget;
-            restaurantsBudget = (float) (restaurantsPrior/priorSum)*remainBudget;
-            attractionsBudget = (float) (attractionsPrior/priorSum)*remainBudget;
+            accommodationsBudget = ((float) accommodationsPrior/priorSum)*remainBudget;
+            restaurantsBudget = ((float) restaurantsPrior/priorSum)*remainBudget;
+            attractionsBudget = ((float) attractionsPrior/priorSum)*remainBudget;
         }
 
         List<Accommodation> accommodationList = accommodationRepository.findByCityAndPriceBetween(
@@ -98,8 +96,8 @@ public class ProductListServiceImpl implements ProductListService {
                     sortByPrice()).get(0).getPrice();
             accommodationsBudget = minAccommodationsPrice*peopleNum + margin;
             priorSum = restaurantsPrior + attractionsPrior;
-            restaurantsBudget = (float) (restaurantsPrior/priorSum)*remainBudget;
-            attractionsBudget = (float) (attractionsPrior/priorSum)*remainBudget;
+            restaurantsBudget = ((float) restaurantsPrior/priorSum)*remainBudget;
+            attractionsBudget = ((float) attractionsPrior/priorSum)*remainBudget;
         }
 
         journey.setFlightsBudget(flightsBudget);
@@ -121,7 +119,7 @@ public class ProductListServiceImpl implements ProductListService {
         float restaurantsBudget = journey.map(Journey::getAccommodationsBudget).orElse(0F);
         float attractionsBudget = journey.map(Journey::getAttractionsBudget).orElse(0F);
         float budget = journey.map(Journey::getBudget).orElse(0);
-        float margin = (float) (budget*0.03);
+        float margin = (float) 0.03*budget;
 
         PageRequest pageRequest = PageRequest.of(
                 0,
@@ -130,7 +128,7 @@ public class ProductListServiceImpl implements ProductListService {
         );
 
         return EntireProductListResponseDto.builder()
-                .journeyId(journeyId)
+                .journeyId(journeyId.toString())
                 .flightsBudget(flightsBudget)
                 .accommodationsBudget(accommodationsBudget)
                 .restaurantsBudget(restaurantsBudget)
@@ -139,15 +137,15 @@ public class ProductListServiceImpl implements ProductListService {
                         city,
                         (accommodationsBudget-margin)/peopleNum,
                         (accommodationsBudget+margin)/peopleNum,
-                        pageRequest))
-                .restaurants(restaurantRepository.findAllByCity(city, pageRequest))
-                .attractions(attractionRepository.findAllByCity(city, pageRequest))
+                        pageRequest).getContent())
+                .restaurants(restaurantRepository.findAllByCity(city, pageRequest).getContent())
+                .attractions(attractionRepository.findAllByCity(city, pageRequest).getContent())
                 .build();
     }
 
     @Override
-    public Page<EntireFlights> findFlights(ObjectId journeyId, int page) {
-        Optional<Journey> journey = journeyRepository.findById(journeyId);
+    public Page<EntireFlights> findFlights(String journeyId, int page) {
+        Optional<Journey> journey = journeyRepository.findById(new ObjectId(journeyId));
         String city = journey.map(Journey::getPlace).orElse("");
         float flightsBudget = journey.map(Journey::getFlightsBudget).orElse(0F);
         float budget = journey.map(Journey::getBudget).orElse(0);
@@ -156,8 +154,8 @@ public class ProductListServiceImpl implements ProductListService {
     }
 
     @Override
-    public Page<Accommodation> findAccommodations(ObjectId journeyId, int page) {
-        Optional<Journey> journey = journeyRepository.findById(journeyId);
+    public Page<Accommodation> findAccommodations(String journeyId, int page) {
+        Optional<Journey> journey = journeyRepository.findById(new ObjectId(journeyId));
         String city = journey.map(Journey::getPlace).orElse("");
         float accommodationsBudget = journey.map(Journey::getAccommodationsBudget).orElse(0F);
         int peopleNum = journey.map(Journey::getPeopleNum).orElse(1);
@@ -177,8 +175,8 @@ public class ProductListServiceImpl implements ProductListService {
     }
 
     @Override
-    public Page<Restaurant> findRestaurants(ObjectId journeyId, int page) {
-        Optional<Journey> journey = journeyRepository.findById(journeyId);
+    public Page<Restaurant> findRestaurants(String journeyId, int page) {
+        Optional<Journey> journey = journeyRepository.findById(new ObjectId(journeyId));
         String city = journey.map(Journey::getPlace).orElse("");
         PageRequest pageRequest = PageRequest.of(
                 page,
@@ -189,8 +187,8 @@ public class ProductListServiceImpl implements ProductListService {
     }
 
     @Override
-    public Page<Attraction> findAttractions(ObjectId journeyId, int page) {
-        Optional<Journey> journey = journeyRepository.findById(journeyId);
+    public Page<Attraction> findAttractions(String journeyId, int page) {
+        Optional<Journey> journey = journeyRepository.findById(new ObjectId(journeyId));
         String city = journey.map(Journey::getPlace).orElse("");
         PageRequest pageRequest = PageRequest.of(
                 page,

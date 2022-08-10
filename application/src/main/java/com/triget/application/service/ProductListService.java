@@ -11,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
+import java.util.List;
 
 public interface ProductListService {
     @Transactional
@@ -18,11 +19,11 @@ public interface ProductListService {
     @Transactional(readOnly = true)
     public EntireProductListResponseDto setResponseDto(ObjectId journeyId);
     @Transactional(readOnly = true)
-    public Page<EntireFlights> findFlights(ObjectId journeyId, int page);
+    public Page<EntireFlights> findFlights(String journeyId, int page);
     @Transactional(readOnly = true)
-    public Page<Accommodation> findAccommodations(ObjectId journeyId, int page);
+    public Page<Accommodation> findAccommodations(String journeyId, int page);
     @Transactional(readOnly = true)
-    public Page<Restaurant> findRestaurants(ObjectId journeyId, int page);
+    public Page<Restaurant> findRestaurants(String journeyId, int page);
     @Transactional(readOnly = true)
-    public Page<Attraction> findAttractions(ObjectId journeyId, int page);
+    public Page<Attraction> findAttractions(String journeyId, int page);
 }
