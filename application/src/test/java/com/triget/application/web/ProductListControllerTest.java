@@ -18,7 +18,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@SpringBootTest
 @WebMvcTest(controllers = ProductListController.class)
 public class ProductListControllerTest {
 
@@ -35,12 +34,12 @@ public class ProductListControllerTest {
         input.put("theme", "테마");
         input.put("peopleNum", String.valueOf(2));
         input.put("departureDate", "2022-09-01");
-        input.put("arrivalDate", "2022-09-03");
+        input.put("arrivalDate", "2022-09-04");
         input.put("budget", String.valueOf(4000000));
-        input.put("flightsPrior", String.valueOf(2));
+        input.put("flightsPrior", String.valueOf(3));
         input.put("accommodationsPrior", String.valueOf(5));
         input.put("restaurantsPrior", String.valueOf(4));
-        input.put("attractionsPrior", String.valueOf(3));
+        input.put("attractionsPrior", String.valueOf(2));
 
         mvc.perform(
                 post("/product/list")
