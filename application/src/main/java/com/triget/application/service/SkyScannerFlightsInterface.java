@@ -1,5 +1,6 @@
 package com.triget.application.service;
 
+import com.triget.application.domain.journey.Journey;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -25,7 +26,7 @@ public class SkyScannerFlightsInterface {
                 adults, origin, destination, departureDate, returnDate);
     }
 
-    public ResponseEntity<Object> getData(int adults, String origin, String destination, String departureDate, String returnDate) {
+    public HashMap<String, Object> getData(int adults, String origin, String destination, String departureDate, String returnDate) {
         HashMap<String, Object> result = new HashMap<String, Object>();
         ResponseEntity<Object> resultMap = new ResponseEntity<>(null,null,200);
 
@@ -55,23 +56,27 @@ public class SkyScannerFlightsInterface {
             System.out.println("error");
             System.out.println(e.toString());
 
-            return resultMap;
+            return result;
         }
         catch (Exception e) {
             result.put("statusCode", "999");
             result.put("body"  , "excpetion오류");
             System.out.println(e.toString());
 
-            return resultMap;
+            return result;
 
         }
 
-        return resultMap;
+        return result;
 
     }
 
     @Transactional
-    public void addFlights() {
-
+    public void addFlights(Journey journey, String destination) {
+        int adults = journey.getPeopleNum();
+        String origin = journey.getDepartureAirport();
+        String departureDate = journey.getDepartureDateTime().toString();
+        String returnDate = journey.getArrivalDateTime().toString();
+        HashMap<String, Object> result = getData(adults, origin, destination, departureDate, returnDate);
     }
 }
