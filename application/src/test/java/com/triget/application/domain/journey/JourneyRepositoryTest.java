@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @ExtendWith(SpringExtension.class)
@@ -35,13 +36,13 @@ public class JourneyRepositoryTest {
         JourneyTheme journeyTheme = journeyThemeRepository.findByKoreanName("테마").orElse(null);
 
         Date today = new Date();
-        //SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.id = journeyRepository.save(Journey.builder()
                 .place("도쿄")
                 .theme(journeyTheme)
                 .peopleNum(3)
-                .departureDateTime(today)
-                .arrivalDateTime(today)
+                .departureDate(dateFormat.format(today))
+                .arrivalDate(dateFormat.format(today))
                 .departureAirport("ICN")
                 .budget(1000000)
                 .flightsPriority(5)
