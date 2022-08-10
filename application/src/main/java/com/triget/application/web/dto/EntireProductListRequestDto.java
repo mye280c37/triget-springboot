@@ -44,6 +44,8 @@ public class EntireProductListRequestDto {
 
     public Journey toEntity(JourneyTheme theme) throws ParseException {
         int priorSum = flightsPrior + accommodationsPrior + restaurantsPrior + attractionsPrior;
+        System.out.print( ((float)flightsPrior/priorSum));
+        System.out.printf("%f\n",  ((float)flightsPrior/priorSum)*budget);
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return Journey.builder()
                 .place(place)
@@ -57,10 +59,10 @@ public class EntireProductListRequestDto {
                 .accommodationsPriority(accommodationsPrior)
                 .restaurantsPriority(restaurantsPrior)
                 .attractionsPriority(attractionsPrior)
-                .flightsBudget((float) (flightsPrior/priorSum)*budget)
-                .accommodationsBudget((float) (accommodationsPrior/priorSum)*budget)
-                .restaurantsBudget((float) (restaurantsPrior/priorSum)*budget)
-                .attractionsBudget((float) (attractionsPrior/priorSum)*budget)
+                .flightsBudget(((float) flightsPrior/priorSum)*budget)
+                .accommodationsBudget(((float) accommodationsPrior/priorSum)*budget)
+                .restaurantsBudget(((float) restaurantsPrior/priorSum)*budget)
+                .attractionsBudget(((float) attractionsPrior/priorSum)*budget)
                 .build();
     }
 }

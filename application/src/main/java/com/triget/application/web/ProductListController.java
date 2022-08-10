@@ -13,6 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
+import java.util.List;
 
 @RestController
 public class ProductListController {
@@ -32,25 +33,25 @@ public class ProductListController {
     }
 
     @GetMapping("/product/list/flights")
-    public Page<EntireFlights> returnFlightsList(@RequestParam("journeyId") ObjectId journeyId,
+    public Page<EntireFlights> returnFlightsList(@RequestParam("journeyId") String journeyId,
                                                  @RequestParam("page") int page) {
         return productListServiceImpl.findFlights(journeyId, page);
     }
 
     @GetMapping("/product/list/accommodations")
-    public Page<Accommodation> returnAccommodationsList(@RequestParam("journeyId") ObjectId journeyId,
+    public Page<Accommodation> returnAccommodationsList(@RequestParam("journeyId") String journeyId,
                                                         @RequestParam("page") int page) {
         return productListServiceImpl.findAccommodations(journeyId, page);
     }
 
     @GetMapping("/product/list/restaurants")
-    public Page<Restaurant> returnRestaurantsList(@RequestParam("journeyId") ObjectId journeyId,
+    public Page<Restaurant> returnRestaurantsList(@RequestParam("journeyId") String journeyId,
                                                   @RequestParam("page") int page) {
         return productListServiceImpl.findRestaurants(journeyId, page);
     }
 
     @GetMapping("/product/list/attractions")
-    public Page<Attraction> returnAttractionsList(@RequestParam("journeyId") ObjectId journeyId,
+    public Page<Attraction> returnAttractionsList(@RequestParam("journeyId") String journeyId,
                                                   @RequestParam("page") int page) {
         return productListServiceImpl.findAttractions(journeyId, page);
     }

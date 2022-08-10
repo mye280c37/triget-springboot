@@ -9,22 +9,24 @@ import lombok.RequiredArgsConstructor;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 @Getter
 @RequiredArgsConstructor
 public class EntireProductListResponseDto {
-    private ObjectId journeyId;
+    private String journeyId;
     private float flightsBudget;
     private float accommodationsBudget;
     private float restaurantsBudget;
     private float attractionsBudget;
-    private Page<Accommodation> accommodations;
-    private Page<Restaurant> restaurants;
-    private Page<Attraction> attractions;
+    private List<Accommodation> accommodations;
+    private List<Restaurant> restaurants;
+    private List<Attraction> attractions;
 
     @Builder
-    public EntireProductListResponseDto(ObjectId journeyId, float flightsBudget, float accommodationsBudget,
-                                        float restaurantsBudget, float attractionsBudget, Page<Accommodation> accommodations,
-                                        Page<Restaurant> restaurants, Page<Attraction> attractions)
+    public EntireProductListResponseDto(String journeyId, float flightsBudget, float accommodationsBudget,
+                                        float restaurantsBudget, float attractionsBudget, List<Accommodation> accommodations,
+                                        List<Restaurant> restaurants, List<Attraction> attractions)
     {
         this.journeyId = journeyId;
         this.flightsBudget = flightsBudget;
