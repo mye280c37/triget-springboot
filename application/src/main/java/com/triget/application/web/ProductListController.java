@@ -2,7 +2,7 @@ package com.triget.application.web;
 
 import com.triget.application.domain.accommodation.Accommodation;
 import com.triget.application.domain.attraction.Attraction;
-import com.triget.application.domain.entireflights.EntireFlights;
+import com.triget.application.domain.flight.Flight;
 import com.triget.application.domain.restaurant.Restaurant;
 import com.triget.application.service.ProductListServiceImpl;
 import com.triget.application.web.dto.EntireProductListRequestDto;
@@ -13,7 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
-import java.util.List;
 
 @RestController
 public class ProductListController {
@@ -32,9 +31,14 @@ public class ProductListController {
         return productListServiceImpl.setResponseDto(journeyId);
     }
 
+    @GetMapping("/product/list")
+    public EntireProductListResponseDto returnEntireProductList(@RequestParam("journeyId") String journeyId) {
+        return productListServiceImpl.setResponseDto(new ObjectId(journeyId));
+    }
+
     @GetMapping("/product/list/flights")
-    public Page<EntireFlights> returnFlightsList(@RequestParam("journeyId") String journeyId,
-                                                 @RequestParam("page") int page) {
+    public Page<Flight> returnFlightsList(@RequestParam("journeyId") String journeyId,
+                                          @RequestParam("page") int page) {
         return productListServiceImpl.findFlights(journeyId, page);
     }
 
