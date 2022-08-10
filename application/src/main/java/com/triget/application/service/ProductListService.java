@@ -2,7 +2,7 @@ package com.triget.application.service;
 
 import com.triget.application.domain.accommodation.Accommodation;
 import com.triget.application.domain.attraction.Attraction;
-import com.triget.application.domain.entireflights.EntireFlights;
+import com.triget.application.domain.flight.Flight;
 import com.triget.application.domain.restaurant.Restaurant;
 import com.triget.application.web.dto.EntireProductListRequestDto;
 import com.triget.application.web.dto.EntireProductListResponseDto;
@@ -11,7 +11,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
-import java.util.List;
 
 public interface ProductListService {
     @Transactional
@@ -19,7 +18,7 @@ public interface ProductListService {
     @Transactional(readOnly = true)
     public EntireProductListResponseDto setResponseDto(ObjectId journeyId);
     @Transactional(readOnly = true)
-    public Page<EntireFlights> findFlights(String journeyId, int page);
+    public Page<Flight> findFlights(String journeyId, int page);
     @Transactional(readOnly = true)
     public Page<Accommodation> findAccommodations(String journeyId, int page);
     @Transactional(readOnly = true)

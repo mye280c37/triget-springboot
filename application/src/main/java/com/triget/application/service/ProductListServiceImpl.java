@@ -4,9 +4,12 @@ import com.triget.application.domain.accommodation.Accommodation;
 import com.triget.application.domain.accommodation.AccommodationRepository;
 import com.triget.application.domain.attraction.Attraction;
 import com.triget.application.domain.attraction.AttractionRepository;
-import com.triget.application.domain.entireflights.EntireFlights;
+import com.triget.application.domain.flight.Flight;
+import com.triget.application.domain.flight.FlightRepository;
 import com.triget.application.domain.journey.Journey;
 import com.triget.application.domain.journey.JourneyRepository;
+import com.triget.application.domain.place.Place;
+import com.triget.application.domain.place.PlaceRepository;
 import com.triget.application.domain.restaurant.Restaurant;
 import com.triget.application.domain.restaurant.RestaurantRepository;
 import com.triget.application.domain.theme.JourneyTheme;
@@ -33,19 +36,28 @@ public class ProductListServiceImpl implements ProductListService {
     private final AccommodationRepository accommodationRepository;
     private final RestaurantRepository restaurantRepository;
     private final AttractionRepository attractionRepository;
+    private final FlightRepository flightRepository;
+    private final PlaceRepository placeRepository;
+    private final SkyScannerFlightsInterface skyScannerFlightsInterface;
 
     @Autowired
     public ProductListServiceImpl(JourneyRepository journeyRepository,
                                   JourneyThemeRepository journeyThemeRepository,
                                   AccommodationRepository accommodationRepository,
                                   RestaurantRepository restaurantRepository,
-                                  AttractionRepository attractionRepository)
+                                  AttractionRepository attractionRepository,
+                                  FlightRepository flightRepository,
+                                  PlaceRepository placeRepository,
+                                  SkyScannerFlightsInterface skyScannerFlightsInterface)
     {
         this.journeyRepository = journeyRepository;
         this.journeyThemeRepository = journeyThemeRepository;
         this.accommodationRepository = accommodationRepository;
         this.restaurantRepository = restaurantRepository;
         this.attractionRepository = attractionRepository;
+        this.flightRepository = flightRepository;
+        this.placeRepository = placeRepository;
+        this.skyScannerFlightsInterface = skyScannerFlightsInterface;
     }
 
     @Transactional
@@ -60,7 +72,9 @@ public class ProductListServiceImpl implements ProductListService {
     }
 
     private void computePriors(Journey journey) {
-        String city = journey.getPlace();
+        String place = journey.getPlace();
+        String city = placeRepository.findByDisplayName(place).map(Place::getSearchName).orElse(null);
+        assert city!=null;
 
         int accommodationsPrior = journey.getAccommodationsPriority();
         int restaurantsPrior = journey.getRestaurantsPriority();
@@ -76,25 +90,39 @@ public class ProductListServiceImpl implements ProductListService {
         float attractionsBudget = journey.getAttractionsBudget();
         float margin = (float) (remainBudget*0.03);
 
-        float minFlightsPrice = flightsBudget-margin;
-        if (minFlightsPrice < flightsBudget-margin){
+        List<Flight> flights = flightRepository.findByJourneyId(journey.getId().toString(), sortByPrice());
+        float minFlightsPrice = flights.get(0).getPrice();
+        float maxFlightsPrice = flights.get(flights.size()-1).getPrice();
+        if (flightsBudget < minFlightsPrice){
             flightsBudget = minFlightsPrice+margin;
-            remainBudget -= flightsBudget;
-            accommodationsBudget = ((float) accommodationsPrior/priorSum)*remainBudget;
-            restaurantsBudget = ((float) restaurantsPrior/priorSum)*remainBudget;
-            attractionsBudget = ((float) attractionsPrior/priorSum)*remainBudget;
+        } else if (maxFlightsPrice < flightsBudget) {
+            flightsBudget = maxFlightsPrice;
         }
+        remainBudget -= flightsBudget;
+        accommodationsBudget = ((float) accommodationsPrior/priorSum)*remainBudget;
+        restaurantsBudget = ((float) restaurantsPrior/priorSum)*remainBudget;
+        attractionsBudget = ((float) attractionsPrior/priorSum)*remainBudget;
 
-        List<Accommodation> accommodationList = accommodationRepository.findByCityAndPriceBetween(
+        float exchangeRate = (float) 9.79;
+
+        List<Accommodation> accommodations = accommodationRepository.findByCityAndPriceLess(
                 city,
-                (accommodationsBudget-margin)/peopleNum,
-                (accommodationsBudget+margin)/peopleNum
+                accommodationsBudget
         );
-        if (accommodationList.size() == 0){
-            float minAccommodationsPrice = accommodationRepository.findAllByCity(
+
+        if (accommodations.size() == 0){
+            accommodations  = accommodationRepository.findAllByCity(
                     city,
-                    sortByPrice()).get(0).getPrice();
-            accommodationsBudget = minAccommodationsPrice*peopleNum + margin;
+                    sortByPrice());
+            float minAccommodationsPriceByKrw = accommodations.get(0).getPrice()*exchangeRate;
+            float maxAccommodationsPriceByKrw = accommodations.get(accommodations.size()-1).getPrice()*exchangeRate;
+            System.out.printf("price(JPY): %.1f, %.1f\n", accommodations.get(0).getPrice(), accommodations.get(accommodations.size()-1).getPrice());
+            if (accommodationsBudget < minAccommodationsPriceByKrw){
+                accommodationsBudget = minAccommodationsPriceByKrw + margin;
+            } else if (maxAccommodationsPriceByKrw < accommodationsBudget) {
+                accommodationsBudget = maxAccommodationsPriceByKrw;
+            }
+            remainBudget -= accommodationsBudget;
             priorSum = restaurantsPrior + attractionsPrior;
             restaurantsBudget = ((float) restaurantsPrior/priorSum)*remainBudget;
             attractionsBudget = ((float) attractionsPrior/priorSum)*remainBudget;
@@ -111,8 +139,20 @@ public class ProductListServiceImpl implements ProductListService {
     @Override
     public EntireProductListResponseDto setResponseDto(ObjectId journeyId) {
         Optional<Journey> journey = journeyRepository.findById(journeyId);
-        journey.ifPresent(this::computePriors);
-        String city = journey.map(Journey::getPlace).orElse("");
+
+        journey.ifPresent(obj -> {
+            try {
+                skyScannerFlightsInterface.addFlights(obj);
+                computePriors(obj);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        String place = journey.map(Journey::getPlace).orElse(null);
+        assert place!=null;
+        String city = placeRepository.findByDisplayName(place).map(Place::getSearchName).orElse(null);
+        assert city!=null;
         int peopleNum = journey.map(Journey::getPeopleNum).orElse(1);
         float flightsBudget = journey.map(Journey::getFlightsBudget).orElse(0F);
         float accommodationsBudget = journey.map(Journey::getAccommodationsBudget).orElse(0F);
@@ -127,16 +167,22 @@ public class ProductListServiceImpl implements ProductListService {
                 Sort.by("rating").descending().and(Sort.by("popularity").descending())
         );
 
+        float exchangeRate = (float) 9.79;
+
         return EntireProductListResponseDto.builder()
                 .journeyId(journeyId.toString())
                 .flightsBudget(flightsBudget)
                 .accommodationsBudget(accommodationsBudget)
                 .restaurantsBudget(restaurantsBudget)
                 .attractionsBudget(attractionsBudget)
-                .accommodations(accommodationRepository.findByCityAndPriceBetween(
+                .flights(flightRepository.findByJourneyIdAndPriceLess(
+                        journeyId.toString(),
+                        flightsBudget,
+                        pageRequest
+                ).getContent())
+                .accommodations(accommodationRepository.findByCityAndPriceLess(
                         city,
-                        (accommodationsBudget-margin)/peopleNum,
-                        (accommodationsBudget+margin)/peopleNum,
+                        accommodationsBudget/exchangeRate,
                         pageRequest).getContent())
                 .restaurants(restaurantRepository.findAllByCity(city, pageRequest).getContent())
                 .attractions(attractionRepository.findAllByCity(city, pageRequest).getContent())
@@ -144,19 +190,30 @@ public class ProductListServiceImpl implements ProductListService {
     }
 
     @Override
-    public Page<EntireFlights> findFlights(String journeyId, int page) {
+    public Page<Flight> findFlights(String journeyId, int page) {
         Optional<Journey> journey = journeyRepository.findById(new ObjectId(journeyId));
-        String city = journey.map(Journey::getPlace).orElse("");
         float flightsBudget = journey.map(Journey::getFlightsBudget).orElse(0F);
         float budget = journey.map(Journey::getBudget).orElse(0);
         float margin = (float) (budget*0.03);
-        return null;
+        PageRequest pageRequest = PageRequest.of(
+                page,
+                10,
+                Sort.by("stopCount").and(Sort.by("score").descending())
+        );
+        return flightRepository.findByJourneyIdAndPriceLess(
+                journeyId,
+                flightsBudget,
+                pageRequest
+        );
     }
 
     @Override
     public Page<Accommodation> findAccommodations(String journeyId, int page) {
         Optional<Journey> journey = journeyRepository.findById(new ObjectId(journeyId));
-        String city = journey.map(Journey::getPlace).orElse("");
+        String place = journey.map(Journey::getPlace).orElse(null);
+        assert place!=null;
+        String city = placeRepository.findByDisplayName(place).map(Place::getSearchName).orElse(null);
+        assert city!=null;
         float accommodationsBudget = journey.map(Journey::getAccommodationsBudget).orElse(0F);
         int peopleNum = journey.map(Journey::getPeopleNum).orElse(1);
         float budget = journey.map(Journey::getBudget).orElse(0);
@@ -166,10 +223,12 @@ public class ProductListServiceImpl implements ProductListService {
                 10,
                 Sort.by("rating").descending().and(Sort.by("popularity").descending())
         );
-        return accommodationRepository.findByCityAndPriceBetween(
+
+        float exchangeRate = (float) 9.79;
+
+        return accommodationRepository.findByCityAndPriceLess(
                 city,
-                (accommodationsBudget-margin)/peopleNum,
-                (accommodationsBudget+margin)/peopleNum,
+                accommodationsBudget/exchangeRate,
                 pageRequest
         );
     }
@@ -177,7 +236,10 @@ public class ProductListServiceImpl implements ProductListService {
     @Override
     public Page<Restaurant> findRestaurants(String journeyId, int page) {
         Optional<Journey> journey = journeyRepository.findById(new ObjectId(journeyId));
-        String city = journey.map(Journey::getPlace).orElse("");
+        String place = journey.map(Journey::getPlace).orElse(null);
+        assert place!=null;
+        String city = placeRepository.findByDisplayName(place).map(Place::getSearchName).orElse(null);
+        assert city!=null;
         PageRequest pageRequest = PageRequest.of(
                 page,
                 10,
@@ -189,7 +251,10 @@ public class ProductListServiceImpl implements ProductListService {
     @Override
     public Page<Attraction> findAttractions(String journeyId, int page) {
         Optional<Journey> journey = journeyRepository.findById(new ObjectId(journeyId));
-        String city = journey.map(Journey::getPlace).orElse("");
+        String place = journey.map(Journey::getPlace).orElse(null);
+        assert place!=null;
+        String city = placeRepository.findByDisplayName(place).map(Place::getSearchName).orElse(null);
+        assert city!=null;
         PageRequest pageRequest = PageRequest.of(
                 page,
                 10,
