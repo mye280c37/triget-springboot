@@ -1,5 +1,6 @@
 package com.triget.application.service;
 
+import com.triget.application.domain.accommodation.Accommodation;
 import com.triget.application.domain.accommodation.AccommodationRepository;
 import com.triget.application.domain.attraction.AttractionRepository;
 import com.triget.application.domain.journey.JourneyRepository;
@@ -16,24 +17,28 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.text.ParseException;
+import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
+@ExtendWith(SpringExtension.class)
+@SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ProductListServiceImplTest {
 
-    @Mock
+    @Autowired
     private JourneyRepository journeyRepository;
-    @Mock
+    @Autowired
     private JourneyThemeRepository journeyThemeRepository;
-    @Mock
+    @Autowired
     private AccommodationRepository accommodationRepository;
-    @Mock
+    @Autowired
     private RestaurantRepository restaurantRepository;
-    @Mock
+    @Autowired
     private AttractionRepository attractionRepository;
-    @InjectMocks
     @Autowired
     private ProductListServiceImpl productListServiceImpl;
     private ObjectId id;
@@ -57,7 +62,8 @@ public class ProductListServiceImplTest {
                 .restaurantsPrior(4)
                 .attractionsPrior(3)
                 .build();
-        productListServiceImpl.saveRequestDto(entireProductListRequestDto);
+        id=productListServiceImpl.saveRequestDto(entireProductListRequestDto);
+        System.out.print(id);
     }
 
     @Test
@@ -77,6 +83,12 @@ public class ProductListServiceImplTest {
 
         id = productListServiceImpl.saveRequestDto(entireProductListRequestDto);
         EntireProductListResponseDto entireProductListResponseDto = productListServiceImpl.setResponseDto(id);
-        System.out.print(entireProductListResponseDto);
+        float margin = (float) 0.03*4000000;
+        float accommodationBudget = entireProductListResponseDto.getAccommodationsBudget();
+        System.out.printf("min: %f ~ max: %f\n", accommodationBudget-margin, accommodationBudget+margin);
+        List<Accommodation> accommodationPage = entireProductListResponseDto.getAccommodations();
+        for(Accommodation item : accommodationPage){
+            System.out.printf("name: %s, price:%f, rating: %f, popularity: %d\n", item.getName(), item.getPrice(), item.getRating(), item.getPopularity());
+        }
     }
 }
