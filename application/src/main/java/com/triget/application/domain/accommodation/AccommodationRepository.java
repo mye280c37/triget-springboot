@@ -14,7 +14,11 @@ import java.util.List;
 public interface AccommodationRepository extends MongoRepository<Accommodation, ObjectId> {
     public List<Accommodation> findAllByCity(String city, Sort orders);
     @Query(value="{$and:[{city: ?0}, {price: {$gte: ?1, $lte: ?2}}]}")
-    public Page<Accommodation> findByCityAndPriceBetween(String city, float priceTo, float priceFrom, Pageable pageable);
+    public Page<Accommodation> findByCityAndPriceBetween(String city, float priceFrom, float priceTo, Pageable pageable);
     @Query(value="{$and:[{city: ?0}, {price: {$gte: ?1, $lte: ?2}}]}", sort="{price:1}")
-    public List<Accommodation> findByCityAndPriceBetween(String city, float priceTo, float priceFrom);
+    public List<Accommodation> findByCityAndPriceBetween(String city, float priceFrom, float priceTo);
+    @Query(value="{$and:[{city: ?0}, {price: {$lte: ?1}}]}")
+    public Page<Accommodation> findByCityAndPriceLess(String city, float priceTo, Pageable pageable);
+    @Query(value="{$and:[{city: ?0}, {price: {$lte: ?1}}]}", sort="{price:1}")
+    public List<Accommodation> findByCityAndPriceLess(String city, float priceTo);
 }
