@@ -179,13 +179,13 @@ public class ProductListServiceImpl implements ProductListService {
                         journeyId.toString(),
                         flightsBudget,
                         pageRequest
-                ).getContent())
+                ))
                 .accommodations(accommodationRepository.findByCityAndPriceLess(
                         city,
                         accommodationsBudget/exchangeRate,
-                        pageRequest).getContent())
-                .restaurants(restaurantRepository.findAllByCity(city, pageRequest).getContent())
-                .attractions(attractionRepository.findAllByCity(city, pageRequest).getContent())
+                        pageRequest))
+                .restaurants(restaurantRepository.findAllByCity(city, pageRequest))
+                .attractions(attractionRepository.findAllByCity(city, pageRequest))
                 .build();
     }
 

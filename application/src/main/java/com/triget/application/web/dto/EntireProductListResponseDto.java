@@ -7,6 +7,7 @@ import com.triget.application.domain.restaurant.Restaurant;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -18,16 +19,16 @@ public class EntireProductListResponseDto {
     private float accommodationsBudget;
     private float restaurantsBudget;
     private float attractionsBudget;
-    private List<Flight> flights;
-    private List<Accommodation> accommodations;
-    private List<Restaurant> restaurants;
-    private List<Attraction> attractions;
+    private Page<Flight> flights;
+    private Page<Accommodation> accommodations;
+    private Page<Restaurant> restaurants;
+    private Page<Attraction> attractions;
 
     @Builder
     public EntireProductListResponseDto(String journeyId, float flightsBudget, float accommodationsBudget,
                                         float restaurantsBudget, float attractionsBudget,
-                                        List<Flight> flights, List<Accommodation> accommodations,
-                                        List<Restaurant> restaurants, List<Attraction> attractions)
+                                        Page<Flight> flights, Page<Accommodation> accommodations,
+                                        Page<Restaurant> restaurants, Page<Attraction> attractions)
     {
         this.journeyId = journeyId;
         this.flightsBudget = flightsBudget;
