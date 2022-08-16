@@ -20,15 +20,15 @@ public class EntireProductListResponseDto {
     private float restaurantsBudget;
     private float attractionsBudget;
     private Page<Flight> flights;
-    private Page<Accommodation> accommodations;
-    private Page<Restaurant> restaurants;
-    private Page<Attraction> attractions;
+    private ProductPageResponseDto accommodations;
+    private ProductPageResponseDto restaurants;
+    private ProductPageResponseDto attractions;
 
     @Builder
     public EntireProductListResponseDto(String journeyId, float flightsBudget, float accommodationsBudget,
                                         float restaurantsBudget, float attractionsBudget,
-                                        Page<Flight> flights, Page<Accommodation> accommodations,
-                                        Page<Restaurant> restaurants, Page<Attraction> attractions)
+                                        Page<Flight> flights, ProductPageResponseDto accommodations,
+                                        ProductPageResponseDto restaurants, ProductPageResponseDto attractions)
     {
         this.journeyId = journeyId;
         this.flightsBudget = flightsBudget;

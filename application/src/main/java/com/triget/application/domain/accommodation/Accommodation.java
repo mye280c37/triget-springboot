@@ -21,7 +21,8 @@ public class Accommodation {
     private float longitude;
     private float latitude;
     private String city;
-    private String district;
+    @Field("district")
+    private String state;
     private String address;
     private float price;
     @Field("currency_code")
@@ -33,7 +34,7 @@ public class Accommodation {
 
     @Builder
     public Accommodation(ObjectId _id, String bookingsId, String name, String thumbnail, String subcategory,
-                         float longitude, float latitude, String city, String district, String address,
+                         float longitude, float latitude, String city, String state, String address,
                          float price, String currencyCode, float rating, int popularity, String detailUrl)
     {
         this._id = _id;
@@ -44,7 +45,7 @@ public class Accommodation {
         this.longitude = longitude;
         this.latitude = latitude;
         this.city = city;
-        this.district = district;
+        this.state = state;
         this.address = address;
         this.price = price;
         this.currencyCode = currencyCode;

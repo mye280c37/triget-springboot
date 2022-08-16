@@ -1,5 +1,6 @@
 package com.triget.application.service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.triget.application.domain.accommodation.Accommodation;
 import com.triget.application.domain.accommodation.AccommodationRepository;
 import com.triget.application.domain.attraction.Attraction;
@@ -16,6 +17,8 @@ import com.triget.application.domain.theme.JourneyTheme;
 import com.triget.application.domain.theme.JourneyThemeRepository;
 import com.triget.application.web.dto.EntireProductListRequestDto;
 import com.triget.application.web.dto.EntireProductListResponseDto;
+import com.triget.application.web.dto.ProductPageResponseDto;
+import com.triget.application.web.dto.ProductResponseDto;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -27,6 +30,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductListServiceImpl implements ProductListService {
@@ -169,6 +173,14 @@ public class ProductListServiceImpl implements ProductListService {
 
         float exchangeRate = (float) 9.79;
 
+        Page<Accommodation> accommodationPage = accommodationRepository.findByCityAndPriceLess(
+                city,
+                accommodationsBudget / exchangeRate,
+                pageRequest);
+
+        Page<Restaurant> restaurantPage = restaurantRepository.findAllByCity(city, pageRequest);
+        Page<Attraction> attractionPage = attractionRepository.findAllByCity(city, pageRequest);
+
         return EntireProductListResponseDto.builder()
                 .journeyId(journeyId.toString())
                 .flightsBudget(flightsBudget)
@@ -180,12 +192,24 @@ public class ProductListServiceImpl implements ProductListService {
                         flightsBudget,
                         pageRequest
                 ))
-                .accommodations(accommodationRepository.findByCityAndPriceLess(
-                        city,
-                        accommodationsBudget/exchangeRate,
-                        pageRequest))
-                .restaurants(restaurantRepository.findAllByCity(city, pageRequest))
-                .attractions(attractionRepository.findAllByCity(city, pageRequest))
+                .accommodations(ProductPageResponseDto.builder()
+                        .content(accommodationPage.getContent().stream().map(ProductResponseDto::new).toList())
+                        .numberOfElements(accommodationPage.getNumberOfElements())
+                        .last(accommodationPage.isLast())
+                        .empty(accommodationPage.isEmpty())
+                        .build())
+                .restaurants(ProductPageResponseDto.builder()
+                        .content(restaurantPage.getContent().stream().map(ProductResponseDto::new).toList())
+                        .numberOfElements(restaurantPage.getNumberOfElements())
+                        .last(restaurantPage.isLast())
+                        .empty(restaurantPage.isEmpty())
+                        .build())
+                .attractions(ProductPageResponseDto.builder()
+                        .content(attractionPage.getContent().stream().map(ProductResponseDto::new).toList())
+                        .numberOfElements(attractionPage.getNumberOfElements())
+                        .last(attractionPage.isLast())
+                        .empty(attractionPage.isEmpty())
+                        .build())
                 .build();
     }
 
