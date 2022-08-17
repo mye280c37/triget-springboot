@@ -17,8 +17,8 @@ public interface AccommodationRepository extends MongoRepository<Accommodation, 
     public Page<Accommodation> findByCityAndPriceBetween(String city, float priceFrom, float priceTo, Pageable pageable);
     @Query(value="{$and:[{city: ?0}, {price: {$gte: ?1, $lte: ?2}}]}", sort="{price:1}")
     public List<Accommodation> findByCityAndPriceBetween(String city, float priceFrom, float priceTo);
-    @Query(value="{$and:[{city: ?0}, {price: {$lte: ?1}}]}")
-    public Page<Accommodation> findByCityAndPriceLess(String city, float priceTo, Pageable pageable);
-    @Query(value="{$and:[{city: ?0}, {price: {$lte: ?1}}]}", sort="{price:1}")
-    public List<Accommodation> findByCityAndPriceLess(String city, float priceTo);
+    @Query(value="{$and:[{city: ?0}, {price: {$lte: ?1}}, {keywords: ?2}]}")
+    public Page<Accommodation> findByCityAndKeywordsAndPriceLess(String city, float priceTo, String keyword, Pageable pageable);
+    @Query(value="{$and:[{city: ?0}, {price: {$lte: ?1}}, {keywords: ?2}]}", sort="{price:1}")
+    public List<Accommodation> findByCityAndKeywordsAndPriceLess(String city, float priceTo, String keyword);
 }

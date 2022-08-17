@@ -1,6 +1,5 @@
 package com.triget.application.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.triget.application.domain.accommodation.Accommodation;
 import com.triget.application.domain.accommodation.AccommodationRepository;
 import com.triget.application.domain.attraction.Attraction;
@@ -13,7 +12,6 @@ import com.triget.application.domain.place.Place;
 import com.triget.application.domain.place.PlaceRepository;
 import com.triget.application.domain.restaurant.Restaurant;
 import com.triget.application.domain.restaurant.RestaurantRepository;
-import com.triget.application.domain.theme.JourneyTheme;
 import com.triget.application.domain.theme.JourneyThemeRepository;
 import com.triget.application.web.dto.EntireProductListRequestDto;
 import com.triget.application.web.dto.EntireProductListResponseDto;
@@ -27,10 +25,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductListServiceImpl implements ProductListService {
@@ -66,9 +62,9 @@ public class ProductListServiceImpl implements ProductListService {
 
     @Transactional
     @Override
-    public ObjectId saveRequestDto(EntireProductListRequestDto dto) throws ParseException, NullPointerException {
-        JourneyTheme journeyTheme = journeyThemeRepository.findByKoreanName(dto.getTheme()).orElse(null);
-        return journeyRepository.save(dto.toEntity(journeyTheme)).getId();
+    public ObjectId saveRequestDto(EntireProductListRequestDto dto) throws NullPointerException {
+        //JourneyTheme journeyTheme = journeyThemeRepository.findByKoreanName(dto.getTheme()).orElse(null);
+        return journeyRepository.save(dto.toEntity()).getId();
     }
 
     private Sort sortByPrice() {
@@ -79,6 +75,7 @@ public class ProductListServiceImpl implements ProductListService {
         String place = journey.getPlace();
         String city = placeRepository.findByDisplayName(place).map(Place::getSearchName).orElse(null);
         assert city!=null;
+        String theme = journey.getTheme();
 
         int accommodationsPrior = journey.getAccommodationsPriority();
         int restaurantsPrior = journey.getRestaurantsPriority();
@@ -109,9 +106,10 @@ public class ProductListServiceImpl implements ProductListService {
 
         float exchangeRate = (float) 9.79;
 
-        List<Accommodation> accommodations = accommodationRepository.findByCityAndPriceLess(
+        List<Accommodation> accommodations = accommodationRepository.findByCityAndKeywordsAndPriceLess(
                 city,
-                accommodationsBudget
+                accommodationsBudget,
+                theme
         );
 
         if (accommodations.size() == 0){
@@ -157,6 +155,7 @@ public class ProductListServiceImpl implements ProductListService {
         assert place!=null;
         String city = placeRepository.findByDisplayName(place).map(Place::getSearchName).orElse(null);
         assert city!=null;
+        String theme = journey.map(Journey::getTheme).orElse("");
         int peopleNum = journey.map(Journey::getPeopleNum).orElse(1);
         float flightsBudget = journey.map(Journey::getFlightsBudget).orElse(0F);
         float accommodationsBudget = journey.map(Journey::getAccommodationsBudget).orElse(0F);
@@ -173,13 +172,14 @@ public class ProductListServiceImpl implements ProductListService {
 
         float exchangeRate = (float) 9.79;
 
-        Page<Accommodation> accommodationPage = accommodationRepository.findByCityAndPriceLess(
+        Page<Accommodation> accommodationPage = accommodationRepository.findByCityAndKeywordsAndPriceLess(
                 city,
                 accommodationsBudget / exchangeRate,
+                theme,
                 pageRequest);
 
-        Page<Restaurant> restaurantPage = restaurantRepository.findAllByCity(city, pageRequest);
-        Page<Attraction> attractionPage = attractionRepository.findAllByCity(city, pageRequest);
+        Page<Restaurant> restaurantPage = restaurantRepository.findAllByCityAndKeywords(city, theme, pageRequest);
+        Page<Attraction> attractionPage = attractionRepository.findAllByCityAndKeywords(city, theme, pageRequest);
 
         return EntireProductListResponseDto.builder()
                 .journeyId(journeyId.toString())
@@ -238,6 +238,7 @@ public class ProductListServiceImpl implements ProductListService {
         assert place!=null;
         String city = placeRepository.findByDisplayName(place).map(Place::getSearchName).orElse(null);
         assert city!=null;
+        String theme = journey.map(Journey::getTheme).orElse("");
         float accommodationsBudget = journey.map(Journey::getAccommodationsBudget).orElse(0F);
         int peopleNum = journey.map(Journey::getPeopleNum).orElse(1);
         float budget = journey.map(Journey::getBudget).orElse(0);
@@ -250,9 +251,10 @@ public class ProductListServiceImpl implements ProductListService {
 
         float exchangeRate = (float) 9.79;
 
-        return accommodationRepository.findByCityAndPriceLess(
+        return accommodationRepository.findByCityAndKeywordsAndPriceLess(
                 city,
                 accommodationsBudget/exchangeRate,
+                theme,
                 pageRequest
         );
     }
@@ -264,12 +266,13 @@ public class ProductListServiceImpl implements ProductListService {
         assert place!=null;
         String city = placeRepository.findByDisplayName(place).map(Place::getSearchName).orElse(null);
         assert city!=null;
+        String theme = journey.map(Journey::getTheme).orElse("");
         PageRequest pageRequest = PageRequest.of(
                 page,
                 10,
                 Sort.by("rating").descending().and(Sort.by("popularity").descending())
         );
-        return restaurantRepository.findAllByCity(city, pageRequest);
+        return restaurantRepository.findAllByCityAndKeywords(city, theme, pageRequest);
     }
 
     @Override
@@ -279,11 +282,12 @@ public class ProductListServiceImpl implements ProductListService {
         assert place!=null;
         String city = placeRepository.findByDisplayName(place).map(Place::getSearchName).orElse(null);
         assert city!=null;
+        String theme = journey.map(Journey::getTheme).orElse("");
         PageRequest pageRequest = PageRequest.of(
                 page,
                 10,
                 Sort.by("rating").descending().and(Sort.by("popularity").descending())
         );
-        return attractionRepository.findAllByCity(city, pageRequest);
+        return attractionRepository.findAllByCityAndKeywords(city, theme, pageRequest);
     }
 }
