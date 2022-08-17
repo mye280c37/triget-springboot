@@ -7,6 +7,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.lang.Nullable;
+
+import java.util.List;
+
 @Getter
 @RequiredArgsConstructor
 public class ProductResponseDto {
@@ -35,13 +38,14 @@ public class ProductResponseDto {
     private String weekdayHours;
     @Nullable
     private String neighbors;
+    private List<String> keywords;
 
     @Builder
     public ProductResponseDto(String id, String name, String thumbnail, String subcategory,
                               float longitude, float latitude, String city, String state, @Nullable String country,
                               String address, float price, String currencyCode, float rating, int popularity,
                               String detailUrl, @Nullable String productWebsite, @Nullable String weekdayHours,
-                              @Nullable String neighbors)
+                              @Nullable String neighbors, List<String> keywords)
     {
         this.id = id;
         this.name = name;
@@ -61,6 +65,7 @@ public class ProductResponseDto {
         this.productWebsite = productWebsite;
         this.weekdayHours = weekdayHours;
         this.neighbors = neighbors;
+        this.keywords = keywords;
     }
 
     public ProductResponseDto(Accommodation accommodation) {
@@ -78,6 +83,7 @@ public class ProductResponseDto {
         this.rating = accommodation.getRating();
         this.popularity = accommodation.getPopularity();
         this.detailUrl = accommodation.getDetailUrl();
+        this.keywords = accommodation.getKeywords();
     }
 
     public ProductResponseDto(Restaurant restaurant) {
@@ -98,6 +104,7 @@ public class ProductResponseDto {
         this.detailUrl = restaurant.getDetailUrl();
         this.productWebsite = restaurant.getProductWebsite();
         this.weekdayHours = restaurant.getWeekdayHours();
+        this.keywords = restaurant.getKeywords();
     }
 
     public ProductResponseDto(Attraction attraction) {
@@ -117,5 +124,6 @@ public class ProductResponseDto {
         this.productWebsite = attraction.getProductWebsite();
         this.weekdayHours = attraction.getWeekdayHours();
         this.neighbors = attraction.getNeighbors();
+        this.keywords = attraction.getKeywords();
     }
 }

@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.List;
+
 @Data
 @Document(collection = "attraction")
 public class Attraction {
@@ -32,12 +34,13 @@ public class Attraction {
     @Field("weekday_hours")
     private String weekdayHours;
     private String neighbors;
+    private List<String> keywords;
 
     @Builder
     public Attraction(ObjectId _id, String tripadvisorId, String name, String thumbnail, String subcategory,
                       float longitude, float latitude, String city, String state, String country,
                       String address, float rating, int popularity, String detailUrl, String productWebsite,
-                      String weekdayHours, String neighbors)
+                      String weekdayHours, String neighbors, List<String> keywords)
     {
         this._id = _id;
         this.tripadvisorId = tripadvisorId;
@@ -56,6 +59,7 @@ public class Attraction {
         this.productWebsite = productWebsite;
         this.weekdayHours = weekdayHours;
         this.neighbors = neighbors;
+        this.keywords = keywords;
 
     }
 }
