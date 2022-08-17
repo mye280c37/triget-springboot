@@ -7,6 +7,8 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
+import java.util.List;
+
 @Data
 @Document(collection = "hotel")
 public class Accommodation {
@@ -31,11 +33,13 @@ public class Accommodation {
     private int popularity;
     @Field("detail_url")
     private String detailUrl;
+    private List<String> keywords;
 
     @Builder
     public Accommodation(ObjectId _id, String bookingsId, String name, String thumbnail, String subcategory,
                          float longitude, float latitude, String city, String state, String address,
-                         float price, String currencyCode, float rating, int popularity, String detailUrl)
+                         float price, String currencyCode, float rating, int popularity, String detailUrl,
+                         List<String> keywords)
     {
         this._id = _id;
         this.bookingsId = bookingsId;
@@ -52,5 +56,6 @@ public class Accommodation {
         this.rating = rating;
         this.popularity = popularity;
         this.detailUrl = detailUrl;
+        this.keywords = keywords;
     }
 }
