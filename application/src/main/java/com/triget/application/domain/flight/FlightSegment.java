@@ -3,16 +3,12 @@ package com.triget.application.domain.flight;
 import com.triget.application.domain.airline.Airline;
 import lombok.Builder;
 import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
 @Data
 @Document(collection = "segment")
-public class Segment {
-    @Id
-    private ObjectId _id;
+public class FlightSegment {
     @Field("skyscanner_id")
     private String skyScannerId;
     private int order;
@@ -29,8 +25,8 @@ public class Segment {
     private Airline operation;
 
     @Builder
-    public Segment(String skyScannerId, int order, String origin, String destination, String departure,
-                  String arrival, int durationInMinutes, String flightNumber, Airline operation)
+    public FlightSegment(String skyScannerId, int order, String origin, String destination, String departure,
+                         String arrival, int durationInMinutes, String flightNumber, Airline operation)
     {
         this.skyScannerId = skyScannerId;
         this.order = order;

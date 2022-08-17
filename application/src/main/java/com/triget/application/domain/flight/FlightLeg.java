@@ -4,8 +4,6 @@ import com.mongodb.lang.Nullable;
 import com.triget.application.domain.airline.Airline;
 import lombok.Builder;
 import lombok.Data;
-import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -14,8 +12,6 @@ import java.util.List;
 @Data
 @Document(collection = "flight")
 public class FlightLeg {
-    @Id
-    private ObjectId _id;
     @Field("skyscanner_id")
     private String skyScannerId;
     private String origin;
@@ -38,13 +34,13 @@ public class FlightLeg {
     @Field("airport_change_in")
     private List<String> airportChangeIn;
     @Nullable
-    private List<Segment> segments;
+    private List<FlightSegment> flightSegments;
 
     @Builder
     public FlightLeg(String skyScannerId, String origin, String destination, String departure,
                      String arrival, int durationInMinutes, int timeDeltaInDays, int stopCount,
                      @Nullable Boolean isSmallestStops, List<Airline> operations, @Nullable List<String> airportChangeIn,
-                     @Nullable List<Segment> segments)
+                     @Nullable List<FlightSegment> flightSegments)
     {
         this.skyScannerId = skyScannerId;
         this.origin = origin;
@@ -57,6 +53,6 @@ public class FlightLeg {
         this.isSmallestStops = isSmallestStops;
         this.operations = operations;
         this.airportChangeIn = airportChangeIn;
-        this.segments = segments;
+        this.flightSegments = flightSegments;
     }
 }

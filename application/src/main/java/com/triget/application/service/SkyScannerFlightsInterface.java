@@ -1,5 +1,6 @@
 package com.triget.application.service;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.triget.application.domain.airport.Airport;
 import com.triget.application.domain.airport.AirportRepository;
@@ -8,8 +9,9 @@ import com.triget.application.domain.airline.AirlineRepository;
 import com.triget.application.domain.flight.Flight;
 import com.triget.application.domain.flight.FlightRepository;
 import com.triget.application.domain.flight.FlightLeg;
-import com.triget.application.domain.flight.Segment;
+import com.triget.application.domain.flight.FlightSegment;
 import com.triget.application.domain.journey.Journey;
+import com.triget.application.web.dto.skyscanner.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
@@ -90,104 +92,101 @@ public class SkyScannerFlightsInterface {
 
     }
 
-    private Segment convertToSegment(HashMap<String, Object> segment, int order) {
+    private FlightSegment convertToSegment(Segment segment, int order) {
         ObjectMapper objectMapper = new ObjectMapper();
-        HashMap<String, Object> originMap = objectMapper.convertValue(segment.get("origin"), HashMap.class);
-        HashMap<String, Object> destinationMap = objectMapper.convertValue(segment.get("destination"), HashMap.class);
-        segment.put("origin", originMap.get("flightPlaceId"));
-        segment.put("destination", destinationMap.get("flightPlaceId"));
-        HashMap<String, Object> operatingCarrier = objectMapper.convertValue(segment.get("operatingCarrier"), HashMap.class);
-        String skyScannerId = operatingCarrier.get("id").toString();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //HashMap<String, Object> originMap = objectMapper.convertValue(segment.getOrigin(), HashMap.class);
+        //HashMap<String, Object> destinationMap = objectMapper.convertValue(segment.getDestination(), HashMap.class);
+        Operation operatingCarrier = segment.getOperatingCarrier();
+        String skyScannerId = operatingCarrier.getId();
         List<Airline> airlineList = airlineRepository.findBySkyScannerId(skyScannerId);
         if(airlineList.size() == 0) {
             airlineRepository.save(
                     Airline.builder()
                             .skyScannerId(skyScannerId)
-                            .name(operatingCarrier.get("name").toString())
+                            .name(operatingCarrier.getName())
                             .logoUrl("")
                             .build()
             );
         }
         Airline operation = (airlineRepository.findBySkyScannerId(skyScannerId).get(0));
-        return  Segment.builder()
+        return  FlightSegment.builder()
                 .skyScannerId(skyScannerId)
                 .order(order)
-                .origin(segment.get("origin").toString())
-                .destination(segment.get("destination").toString())
-                .departure(segment.get("departure").toString())
-                .arrival(segment.get("arrival").toString())
-                .durationInMinutes(((Number) segment.get("durationInMinutes")).intValue())
-                .flightNumber(segment.get("flightNumber").toString())
+                .origin(segment.getOrigin().getFlightPlaceId())
+                .destination(segment.getDestination().getFlightPlaceId())
+                .departure(segment.getDeparture())
+                .arrival(segment.getArrival())
+                .durationInMinutes(segment.getDurationInMinutes())
+                .flightNumber(segment.getFlightNumber())
                 .operation(operation)
                 .build();
     }
 
-    private FlightLeg convertToFlight(HashMap<String, Object> leg) {
+    private FlightLeg convertToFlight(Leg leg) {
         ObjectMapper objectMapper = new ObjectMapper();
-        HashMap<String, Object> originMap = objectMapper.convertValue(leg.get("origin"), HashMap.class);
-        HashMap<String, Object> destinationMap = objectMapper.convertValue(leg.get("destination"), HashMap.class);
-        leg.put("origin", originMap.get("displayCode"));
-        leg.put("destination", destinationMap.get("displayCode"));
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        //HashMap<String, Object> originMap = objectMapper.convertValue(leg.getOrigin(), HashMap.class);
+        //HashMap<String, Object> destinationMap = objectMapper.convertValue(leg.getDestination(), HashMap.class);
         List<Airline> operations = new ArrayList<>();
-        HashMap<String, Object> carriers = objectMapper.convertValue(leg.get("carriers"), HashMap.class);
-        List<HashMap<String, Object>> marketing = objectMapper.convertValue(carriers.get("marketing"), List.class);
-        for(HashMap<String, Object> operation: marketing) {
-            String skyScannerId = operation.get("id").toString();
+        List<Operation> marketing = leg.getCarriers().getMarketing();
+        assert marketing != null;
+        for(Operation operation: marketing) {
+            String skyScannerId = operation.getId();
             List<Airline> airlineList = airlineRepository.findBySkyScannerId(skyScannerId);
             if(airlineList.size() == 0) {
                 airlineRepository.save(
                         Airline.builder()
                                 .skyScannerId(skyScannerId)
-                                .name(operation.get("name").toString())
-                                .logoUrl(operation.get("logoUrl").toString())
+                                .name(operation.getName())
+                                .logoUrl(operation.getLogoUrl())
                                 .build()
                 );
             }
             operations.add(airlineRepository.findBySkyScannerId(skyScannerId).get(0));
         }
-        List<Segment> segments = new ArrayList<>();
-        List<HashMap<String, Object>> segmentsMap = objectMapper.convertValue(leg.get("segments"), List.class);
+        List<FlightSegment> flightSegments = new ArrayList<>();
+        List<Segment> segmentsMap = leg.getSegments();
         int order = 0;
-        for(HashMap<String, Object> segment: segmentsMap) {
-            segments.add(convertToSegment(segment, order));
+        for(Segment segment: segmentsMap) {
+            flightSegments.add(convertToSegment(segment, order));
             order++;
         }
         return FlightLeg.builder()
-                .skyScannerId(leg.get("id").toString())
-                .origin(leg.get("origin").toString())
-                .destination(leg.get("destination").toString())
-                .departure(leg.get("departure").toString())
-                .arrival(leg.get("arrival").toString())
-                .durationInMinutes(((Number) leg.get("durationInMinutes")).intValue())
-                .timeDeltaInDays(((Number) leg.get("timeDeltaInDays")).intValue())
-                .stopCount(((Number) leg.get("stopCount")).intValue())
-                .isSmallestStops((Boolean) leg.get("isSmallestStops"))
+                .skyScannerId(leg.getId())
+                .origin(leg.getOrigin().getDisplayCode())
+                .destination(leg.getDestination().getDisplayCode())
+                .departure(leg.getDeparture())
+                .arrival(leg.getArrival())
+                .durationInMinutes(leg.getDurationInMinutes())
+                .timeDeltaInDays(leg.getTimeDeltaInDays())
+                .stopCount(leg.getStopCount())
+                .isSmallestStops(leg.getIsSmallestStops())
                 .operations(operations)
-                .airportChangeIn(objectMapper.convertValue(leg.getOrDefault("airportChangeIn", new ArrayList<String>()), List.class))
-                .segments(segments)
+                .airportChangeIn(leg.getAirportChangeIn())
+                .flightSegments(flightSegments)
                 .build();
     }
 
     @Transactional
-    public void convertToEntireFlights(String journeyId, HashMap<String,Object> result) {
+    public void convertToEntireFlights(String journeyId, SkyScannerSearchBestDto body) {
         ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-        HashMap<String,Object> body = objectMapper.convertValue(result.get("body"), HashMap.class);
-        HashMap<String,Object> itineraries = objectMapper.convertValue(body.get("itineraries"), HashMap.class);
-        List<HashMap<String, Object>> buckets = objectMapper.convertValue(itineraries.get("buckets"), List.class);
+        List<Bucket> buckets = body.getItineraries().getBuckets();
 
-        for(HashMap<String, Object> bucket: buckets) {
-            String type = bucket.get("id").toString();
-            List<HashMap<String, Object>> items = objectMapper.convertValue(bucket.get("items"), List.class);
-            for(HashMap<String, Object> item: items) {
-                String skyScannerId = item.get("id").toString();
+        for(Bucket bucket: buckets) {
+            String type = bucket.getId();
+            List<Item> items = bucket.getItems();
+            for(Item item: items) {
+                String skyScannerId = item.getId();
                 if(flightRepository.findByJourneyIdAndSkyScannerId(journeyId, skyScannerId).isEmpty()){
                     List<FlightLeg> legs = new ArrayList<>();
 
-                    HashMap<String, Object> priceMap = objectMapper.convertValue(item.get("price"), HashMap.class);
+                    //HashMap<String, Object> priceMap = objectMapper.convertValue(item.getPrice(), HashMap.class);
                     int totalStopCounts = 0;
-                    List<HashMap<String, Object>> legsMap = objectMapper.convertValue(item.get("legs"), List.class);
-                    for(HashMap<String, Object> leg: legsMap){
+                    List<Leg> legsMap = item.getLegs();
+                    for(Leg leg: legsMap){
                         FlightLeg flightLeg = convertToFlight(leg);
                         totalStopCounts += flightLeg.getStopCount();
                         legs.add(flightLeg);
@@ -195,12 +194,12 @@ public class SkyScannerFlightsInterface {
                     flightRepository.save(Flight.builder()
                                     .journeyId(journeyId)
                                     .skyScannerId(skyScannerId)
-                                    .price(((Number) priceMap.get("raw")).floatValue())
+                                    .price(item.getPrice().getRaw())
                                     .legs(legs)
-                                    .score(((Number) item.get("score")).floatValue())
+                                    .score(item.getScore())
                                     .type(type)
                                     .totalStopCounts(totalStopCounts)
-                                    .detailUrl(item.get("deeplink").toString())
+                                    .detailUrl(item.getDeeplink())
                                     .build()
                     );
                 }
@@ -214,14 +213,15 @@ public class SkyScannerFlightsInterface {
     public void addFlights(Journey journey) throws InterruptedException {
         String journeyId = journey.getId().toString();
         int adults = journey.getPeopleNum();
-        List<String> origins = new ArrayList<>(List.of(new String[]{"ICN", "GMP"}));
+        //List<String> origins = new ArrayList<>(List.of(new String[]{"ICN", "GMP"}));
+        List<String> origins = new ArrayList<>(List.of(new String[]{"GMP"}));
         List<Airport> destinations = airportRepository.findByNameContainsString(journey.getPlace());
         String departureDate = journey.getDepartureDate();
         String returnDate = journey.getArrivalDate();
 
         ObjectMapper objectMapper = new ObjectMapper();
-        HashMap<String, Object> body;
-        HashMap<String, Object> context;
+        objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        SkyScannerSearchBestDto body;
         HashMap<String,Object> result;
         int totalResults;
         String status;
@@ -230,13 +230,12 @@ public class SkyScannerFlightsInterface {
                 for(Airport destination: destinations) {
                     while(true) {
                         result = getData(adults, origin, destination.getIata(), departureDate, returnDate);
-                        body = objectMapper.convertValue(result.get("body"), HashMap.class);
-                        context = objectMapper.convertValue(body.get("context"), HashMap.class);
-                        totalResults = ((Number)context.get("totalResults")).intValue();
-                        status = context.get("status").toString();
-                        System.out.printf("%d(%s)\n", ((Number)context.get("totalResults")).intValue(), context.get("status").toString());
+                        body = objectMapper.convertValue(result.get("body"), SkyScannerSearchBestDto.class);
+                        totalResults = body.getContext().getTotalResults();
+                        status = body.getContext().getStatus();
+                        System.out.printf("%d(%s)\n", totalResults, status);
                         if(totalResults!=0){
-                            convertToEntireFlights(journeyId, result);
+                            convertToEntireFlights(journeyId, body);
                         }
                         if(totalResults < 50 && status.equals("incomplete")) {
                             TimeUnit.SECONDS.sleep(1);
