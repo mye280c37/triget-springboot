@@ -27,7 +27,7 @@ public class AttractionRepositoryTest {
                 Sort.by("rating").descending().and(Sort.by("popularity").descending())
         );
 
-        Page<Attraction> attractionPage = attractionRepository.findAllByCity(city, pageRequest);
+        Page<Attraction> attractionPage = attractionRepository.findAllByCityAndKeywords(city, "relaxing", pageRequest);
         int pageSize = attractionPage.getNumberOfElements();
 
         System.out.printf("\n\nThe Number of Elements: %d\n\n", pageSize);

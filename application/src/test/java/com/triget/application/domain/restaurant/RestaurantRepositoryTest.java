@@ -27,7 +27,7 @@ public class RestaurantRepositoryTest {
                 Sort.by("rating").descending().and(Sort.by("popularity").descending())
         );
 
-        Page<Restaurant> restaurantPage = restaurantRepository.findAllByCity(city, pageRequest);
+        Page<Restaurant> restaurantPage = restaurantRepository.findAllByCityAndKeywords(city, "relaxing", pageRequest);
         int pageSize = restaurantPage.getNumberOfElements();
 
         System.out.printf("\n\nThe Number of Elements: %d\n\n", pageSize);

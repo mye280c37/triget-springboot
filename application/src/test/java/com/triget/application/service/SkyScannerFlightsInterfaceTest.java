@@ -179,7 +179,7 @@ public class SkyScannerFlightsInterfaceTest {
 
         this.id = journeyRepository.save(Journey.builder()
                 .place("도쿄")
-                .theme(journeyTheme)
+                .theme("relaxing")
                 .peopleNum(3)
                 .departureDate("2022-09-01")
                 .arrivalDate("2022-09-03")

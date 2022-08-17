@@ -32,14 +32,12 @@ public class JourneyRepositoryTest {
 
     @Test
     public void create_journey() {
-        // given
-        JourneyTheme journeyTheme = journeyThemeRepository.findByKoreanName("테마").orElse(null);
 
         Date today = new Date();
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         this.id = journeyRepository.save(Journey.builder()
                 .place("도쿄")
-                .theme(journeyTheme)
+                .theme("relaxing")
                 .peopleNum(3)
                 .departureDate(dateFormat.format(today))
                 .arrivalDate(dateFormat.format(today))

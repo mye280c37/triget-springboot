@@ -55,4 +55,19 @@ public class AccommodationRepositoryTest {
             System.out.printf("name: %s, rating: %f, popularity: %d\n", item.getName(), item.getRating(), item.getPopularity());
         }
     }
+
+    @Test
+    public void testFindByCityAndKeywordAndPriceLess() {
+        String city = "Tokyo";
+        float priceTo = 10000;
+        String theme = "relaxing";
+        List<Accommodation> accommodationList = accommodationRepository.findByCityAndKeywordsAndPriceLess(
+                city,
+                priceTo,
+                theme
+        );
+        for(Accommodation item : accommodationList){
+            System.out.printf("name: %s, rating: %f, popularity: %d\n", item.getName(), item.getRating(), item.getPopularity());
+        }
+    }
 }

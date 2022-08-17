@@ -8,6 +8,8 @@ import com.triget.application.domain.restaurant.RestaurantRepository;
 import com.triget.application.domain.theme.JourneyThemeRepository;
 import com.triget.application.web.dto.EntireProductListRequestDto;
 import com.triget.application.web.dto.EntireProductListResponseDto;
+import com.triget.application.web.dto.ProductPageResponseDto;
+import com.triget.application.web.dto.ProductResponseDto;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -67,7 +69,7 @@ public class ProductListServiceImplTest {
     }
 
     @Test
-    public void setResponseTest() throws ParseException {
+    public void setResponseTest() {
         EntireProductListRequestDto entireProductListRequestDto = EntireProductListRequestDto.builder()
                 .place("Tokyo")
                 .theme("테마")
@@ -86,8 +88,8 @@ public class ProductListServiceImplTest {
         float margin = (float) 0.03*4000000;
         float accommodationBudget = entireProductListResponseDto.getAccommodationsBudget();
         System.out.printf("min: %f ~ max: %f\n", accommodationBudget-margin, accommodationBudget+margin);
-        List<Accommodation> accommodationPage = entireProductListResponseDto.getAccommodations();
-        for(Accommodation item : accommodationPage){
+        ProductPageResponseDto accommodationPage = entireProductListResponseDto.getAccommodations();
+        for(ProductResponseDto item : accommodationPage.getContent()){
             System.out.printf("name: %s, price:%f, rating: %f, popularity: %d\n", item.getName(), item.getPrice(), item.getRating(), item.getPopularity());
         }
     }
