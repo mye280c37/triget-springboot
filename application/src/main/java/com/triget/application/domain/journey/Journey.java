@@ -1,19 +1,12 @@
 package com.triget.application.domain.journey;
 
-import com.mongodb.lang.Nullable;
-import com.triget.application.domain.theme.JourneyTheme;
-
 import lombok.Builder;
 import lombok.Data;
-
-import java.util.Date;
 
 import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.Field;
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 @Data
 @Document(collection = "journey")
@@ -22,8 +15,7 @@ public class Journey {
     @Id
     private ObjectId id;
     private String place;
-    @Nullable
-    private JourneyTheme theme;
+    private String theme;
     @Field("people_num")
     private int peopleNum;
     @Field("departure_date")
@@ -51,7 +43,7 @@ public class Journey {
     private float attractionsBudget;
 
     @Builder
-    public Journey(String place, JourneyTheme theme, int peopleNum, String departureDate,
+    public Journey(String place, String theme, int peopleNum, String departureDate,
                    String arrivalDate, String departureAirport, int budget, int flightsPriority,
                    int accommodationsPriority, int restaurantsPriority, int attractionsPriority,
                    float flightsBudget, float accommodationsBudget, float restaurantsBudget, float attractionsBudget){

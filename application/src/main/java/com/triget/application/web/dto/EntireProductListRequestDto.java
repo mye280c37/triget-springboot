@@ -5,7 +5,6 @@ import com.triget.application.domain.theme.JourneyTheme;
 import lombok.Builder;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 public class EntireProductListRequestDto {
 
@@ -38,15 +37,8 @@ public class EntireProductListRequestDto {
         this.attractionsPrior = attractionsPrior;
     }
 
-    public String getTheme() {
-        return theme;
-    }
-
-    public Journey toEntity(JourneyTheme theme) throws ParseException {
+    public Journey toEntity() {
         int priorSum = flightsPrior + accommodationsPrior + restaurantsPrior + attractionsPrior;
-        System.out.print( ((float)flightsPrior/priorSum));
-        System.out.printf("%f\n",  ((float)flightsPrior/priorSum)*budget);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         return Journey.builder()
                 .place(place)
                 .theme(theme)
