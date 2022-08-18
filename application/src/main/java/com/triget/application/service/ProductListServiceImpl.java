@@ -2,10 +2,14 @@ package com.triget.application.service;
 
 import com.triget.application.domain.accommodation.Accommodation;
 import com.triget.application.domain.accommodation.AccommodationRepository;
+import com.triget.application.domain.airline.AirlineRepository;
+import com.triget.application.domain.airport.AirportRepository;
 import com.triget.application.domain.attraction.Attraction;
 import com.triget.application.domain.attraction.AttractionRepository;
 import com.triget.application.domain.flight.Flight;
+import com.triget.application.domain.flight.FlightLeg;
 import com.triget.application.domain.flight.FlightRepository;
+import com.triget.application.domain.flight.FlightSegment;
 import com.triget.application.domain.journey.Journey;
 import com.triget.application.domain.journey.JourneyRepository;
 import com.triget.application.domain.place.Place;
@@ -13,10 +17,11 @@ import com.triget.application.domain.place.PlaceRepository;
 import com.triget.application.domain.restaurant.Restaurant;
 import com.triget.application.domain.restaurant.RestaurantRepository;
 import com.triget.application.domain.theme.JourneyThemeRepository;
-import com.triget.application.web.dto.EntireProductListRequestDto;
-import com.triget.application.web.dto.EntireProductListResponseDto;
-import com.triget.application.web.dto.ProductPageResponseDto;
-import com.triget.application.web.dto.ProductResponseDto;
+import com.triget.application.web.dto.*;
+import com.triget.application.web.dto.flight.FlightLegResponseDto;
+import com.triget.application.web.dto.flight.FlightPageResponseDto;
+import com.triget.application.web.dto.flight.FlightResponseDto;
+import com.triget.application.web.dto.flight.FlightSegmentResponseDto;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,6 +30,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +44,8 @@ public class ProductListServiceImpl implements ProductListService {
     private final AttractionRepository attractionRepository;
     private final FlightRepository flightRepository;
     private final PlaceRepository placeRepository;
+    private final AirlineRepository airlineRepository;
+    private final AirportRepository airportRepository;
     private final SkyScannerFlightsInterface skyScannerFlightsInterface;
 
     @Autowired
@@ -48,6 +56,8 @@ public class ProductListServiceImpl implements ProductListService {
                                   AttractionRepository attractionRepository,
                                   FlightRepository flightRepository,
                                   PlaceRepository placeRepository,
+                                  AirlineRepository airlineRepository,
+                                  AirportRepository airportRepository,
                                   SkyScannerFlightsInterface skyScannerFlightsInterface)
     {
         this.journeyRepository = journeyRepository;
@@ -57,6 +67,8 @@ public class ProductListServiceImpl implements ProductListService {
         this.attractionRepository = attractionRepository;
         this.flightRepository = flightRepository;
         this.placeRepository = placeRepository;
+        this.airlineRepository = airlineRepository;
+        this.airportRepository = airportRepository;
         this.skyScannerFlightsInterface = skyScannerFlightsInterface;
     }
 
@@ -172,49 +184,30 @@ public class ProductListServiceImpl implements ProductListService {
 
         float exchangeRate = (float) 9.79;
 
-        Page<Accommodation> accommodationPage = accommodationRepository.findByCityAndKeywordsAndPriceLess(
-                city,
-                accommodationsBudget / exchangeRate,
-                theme,
-                pageRequest);
-
-        Page<Restaurant> restaurantPage = restaurantRepository.findAllByCityAndKeywords(city, theme, pageRequest);
-        Page<Attraction> attractionPage = attractionRepository.findAllByCityAndKeywords(city, theme, pageRequest);
-
         return EntireProductListResponseDto.builder()
                 .journeyId(journeyId.toString())
                 .flightsBudget(flightsBudget)
                 .accommodationsBudget(accommodationsBudget)
                 .restaurantsBudget(restaurantsBudget)
                 .attractionsBudget(attractionsBudget)
-                .flights(flightRepository.findByJourneyIdAndPriceLess(
+                .flights(mapFlightPageResponseDto(flightRepository.findByJourneyIdAndPriceLess(
                         journeyId.toString(),
                         flightsBudget,
                         pageRequest
-                ))
-                .accommodations(ProductPageResponseDto.builder()
-                        .content(accommodationPage.getContent().stream().map(ProductResponseDto::new).toList())
-                        .numberOfElements(accommodationPage.getNumberOfElements())
-                        .last(accommodationPage.isLast())
-                        .empty(accommodationPage.isEmpty())
-                        .build())
-                .restaurants(ProductPageResponseDto.builder()
-                        .content(restaurantPage.getContent().stream().map(ProductResponseDto::new).toList())
-                        .numberOfElements(restaurantPage.getNumberOfElements())
-                        .last(restaurantPage.isLast())
-                        .empty(restaurantPage.isEmpty())
-                        .build())
-                .attractions(ProductPageResponseDto.builder()
-                        .content(attractionPage.getContent().stream().map(ProductResponseDto::new).toList())
-                        .numberOfElements(attractionPage.getNumberOfElements())
-                        .last(attractionPage.isLast())
-                        .empty(attractionPage.isEmpty())
-                        .build())
+                )))
+                .accommodations(mapAccommodationPageResponseDto(accommodationRepository.findByCityAndKeywordsAndPriceLess(
+                        city,
+                        accommodationsBudget / exchangeRate,
+                        theme,
+                        pageRequest
+                )))
+                .restaurants(mapRestaurantPageResponseDto(restaurantRepository.findAllByCityAndKeywords(city, theme, pageRequest)))
+                .attractions(mapAttractionPageResponseDto(attractionRepository.findAllByCityAndKeywords(city, theme, pageRequest)))
                 .build();
     }
 
     @Override
-    public Page<Flight> findFlights(String journeyId, int page) {
+    public FlightPageResponseDto findFlights(String journeyId, int page) {
         Optional<Journey> journey = journeyRepository.findById(new ObjectId(journeyId));
         float flightsBudget = journey.map(Journey::getFlightsBudget).orElse(0F);
         float budget = journey.map(Journey::getBudget).orElse(0);
@@ -224,15 +217,15 @@ public class ProductListServiceImpl implements ProductListService {
                 10,
                 Sort.by("stopCount").and(Sort.by("score").descending())
         );
-        return flightRepository.findByJourneyIdAndPriceLess(
+        return mapFlightPageResponseDto(flightRepository.findByJourneyIdAndPriceLess(
                 journeyId,
                 flightsBudget,
                 pageRequest
-        );
+        ));
     }
 
     @Override
-    public Page<Accommodation> findAccommodations(String journeyId, int page) {
+    public ProductPageResponseDto findAccommodations(String journeyId, int page) {
         Optional<Journey> journey = journeyRepository.findById(new ObjectId(journeyId));
         String place = journey.map(Journey::getPlace).orElse(null);
         assert place!=null;
@@ -251,16 +244,16 @@ public class ProductListServiceImpl implements ProductListService {
 
         float exchangeRate = (float) 9.79;
 
-        return accommodationRepository.findByCityAndKeywordsAndPriceLess(
+        return mapAccommodationPageResponseDto(accommodationRepository.findByCityAndKeywordsAndPriceLess(
                 city,
                 accommodationsBudget/exchangeRate,
                 theme,
                 pageRequest
-        );
+        ));
     }
 
     @Override
-    public Page<Restaurant> findRestaurants(String journeyId, int page) {
+    public ProductPageResponseDto findRestaurants(String journeyId, int page) {
         Optional<Journey> journey = journeyRepository.findById(new ObjectId(journeyId));
         String place = journey.map(Journey::getPlace).orElse(null);
         assert place!=null;
@@ -272,11 +265,11 @@ public class ProductListServiceImpl implements ProductListService {
                 10,
                 Sort.by("rating").descending().and(Sort.by("popularity").descending())
         );
-        return restaurantRepository.findAllByCityAndKeywords(city, theme, pageRequest);
+        return mapRestaurantPageResponseDto(restaurantRepository.findAllByCityAndKeywords(city, theme, pageRequest));
     }
 
     @Override
-    public Page<Attraction> findAttractions(String journeyId, int page) {
+    public ProductPageResponseDto findAttractions(String journeyId, int page) {
         Optional<Journey> journey = journeyRepository.findById(new ObjectId(journeyId));
         String place = journey.map(Journey::getPlace).orElse(null);
         assert place!=null;
@@ -288,6 +281,83 @@ public class ProductListServiceImpl implements ProductListService {
                 10,
                 Sort.by("rating").descending().and(Sort.by("popularity").descending())
         );
-        return attractionRepository.findAllByCityAndKeywords(city, theme, pageRequest);
+        return mapAttractionPageResponseDto(attractionRepository.findAllByCityAndKeywords(city, theme, pageRequest));
+    }
+
+    @Override
+    public FlightPageResponseDto mapFlightPageResponseDto(Page<Flight> flightPage) {
+        return FlightPageResponseDto.builder()
+                .content(flightPage.getContent().stream().map(item->{
+                    List<FlightLegResponseDto> legs = new ArrayList<>();
+                    for (FlightLeg leg: item.getLegs()){
+                        List<FlightSegment> flightSegments = leg.getSegments();
+                        List<FlightSegmentResponseDto> segments = new ArrayList<>();
+                        if (flightSegments != null){
+                            for (FlightSegment segment: flightSegments) {
+                                segments.add(FlightSegmentResponseDto.builder()
+                                        .segment(segment)
+                                        .origin(AirportResponseDto.builder()
+                                                .airport(airportRepository.findByIata(segment.getOrigin()).orElse(null))
+                                                .build())
+                                        .destination(AirportResponseDto.builder()
+                                                .airport(airportRepository.findByIata(segment.getDestination()).orElse(null))
+                                                .build())
+                                        .operation(AirlineResponseDto.builder()
+                                                .airline(airlineRepository.findById(segment.getOperation().get_id()).orElse(null))
+                                                .build())
+                                        .build());
+                            }
+                        }
+                        legs.add(FlightLegResponseDto.builder()
+                                .leg(leg)
+                                .origin(AirportResponseDto.builder()
+                                        .airport(airportRepository.findByIata(leg.getOrigin()).orElse(null))
+                                        .build())
+                                .destination(AirportResponseDto.builder()
+                                        .airport(airportRepository.findByIata(leg.getDestination()).orElse(null))
+                                        .build())
+                                .operations(leg.getOperations().stream().map(AirlineResponseDto::new).toList())
+                                .flightSegments(segments)
+                                .build());
+                    }
+                    return FlightResponseDto.builder()
+                            .flight(item)
+                            .legs(legs)
+                            .build();
+                }).toList())
+                .numberOfElements(flightPage.getNumberOfElements())
+                .last(flightPage.isLast())
+                .empty(flightPage.isEmpty())
+                .build();
+    }
+
+    @Override
+    public ProductPageResponseDto mapAccommodationPageResponseDto(Page<Accommodation> accommodationPage) {
+        return ProductPageResponseDto.builder()
+                .content(accommodationPage.getContent().stream().map(ProductResponseDto::new).toList())
+                .numberOfElements(accommodationPage.getNumberOfElements())
+                .last(accommodationPage.isLast())
+                .empty(accommodationPage.isEmpty())
+                .build();
+    }
+
+    @Override
+    public ProductPageResponseDto mapRestaurantPageResponseDto(Page<Restaurant> restaurantPage) {
+        return ProductPageResponseDto.builder()
+                .content(restaurantPage.getContent().stream().map(ProductResponseDto::new).toList())
+                .numberOfElements(restaurantPage.getNumberOfElements())
+                .last(restaurantPage.isLast())
+                .empty(restaurantPage.isEmpty())
+                .build();
+    }
+
+    @Override
+    public ProductPageResponseDto mapAttractionPageResponseDto(Page<Attraction> attractionPage) {
+        return ProductPageResponseDto.builder()
+                .content(attractionPage.getContent().stream().map(ProductResponseDto::new).toList())
+                .numberOfElements(attractionPage.getNumberOfElements())
+                .last(attractionPage.isLast())
+                .empty(attractionPage.isEmpty())
+                .build();
     }
 }

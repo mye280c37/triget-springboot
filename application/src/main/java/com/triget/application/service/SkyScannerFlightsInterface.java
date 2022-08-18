@@ -95,8 +95,6 @@ public class SkyScannerFlightsInterface {
     private FlightSegment convertToSegment(Segment segment, int order) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        //HashMap<String, Object> originMap = objectMapper.convertValue(segment.getOrigin(), HashMap.class);
-        //HashMap<String, Object> destinationMap = objectMapper.convertValue(segment.getDestination(), HashMap.class);
         Operation operatingCarrier = segment.getOperatingCarrier();
         String skyScannerId = operatingCarrier.getId();
         List<Airline> airlineList = airlineRepository.findBySkyScannerId(skyScannerId);
@@ -126,8 +124,6 @@ public class SkyScannerFlightsInterface {
     private FlightLeg convertToFlight(Leg leg) {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        //HashMap<String, Object> originMap = objectMapper.convertValue(leg.getOrigin(), HashMap.class);
-        //HashMap<String, Object> destinationMap = objectMapper.convertValue(leg.getDestination(), HashMap.class);
         List<Airline> operations = new ArrayList<>();
         List<Operation> marketing = leg.getCarriers().getMarketing();
         assert marketing != null;
@@ -164,7 +160,7 @@ public class SkyScannerFlightsInterface {
                 .isSmallestStops(leg.getIsSmallestStops())
                 .operations(operations)
                 .airportChangeIn(leg.getAirportChangeIn())
-                .flightSegments(flightSegments)
+                .segments(flightSegments)
                 .build();
     }
 
@@ -183,7 +179,6 @@ public class SkyScannerFlightsInterface {
                 if(flightRepository.findByJourneyIdAndSkyScannerId(journeyId, skyScannerId).isEmpty()){
                     List<FlightLeg> legs = new ArrayList<>();
 
-                    //HashMap<String, Object> priceMap = objectMapper.convertValue(item.getPrice(), HashMap.class);
                     int totalStopCounts = 0;
                     List<Leg> legsMap = item.getLegs();
                     for(Leg leg: legsMap){
@@ -214,7 +209,7 @@ public class SkyScannerFlightsInterface {
         String journeyId = journey.getId().toString();
         int adults = journey.getPeopleNum();
         //List<String> origins = new ArrayList<>(List.of(new String[]{"ICN", "GMP"}));
-        List<String> origins = new ArrayList<>(List.of(new String[]{"GMP"}));
+        String origin = journey.getDepartureAirport();
         List<Airport> destinations = airportRepository.findByNameContainsString(journey.getPlace());
         String departureDate = journey.getDepartureDate();
         String returnDate = journey.getArrivalDate();
@@ -226,22 +221,20 @@ public class SkyScannerFlightsInterface {
         int totalResults;
         String status;
         if(flightRepository.findByJourneyId(journeyId).size() == 0) {
-            for(String origin: origins) {
-                for(Airport destination: destinations) {
-                    while(true) {
-                        result = getData(adults, origin, destination.getIata(), departureDate, returnDate);
-                        body = objectMapper.convertValue(result.get("body"), SkyScannerSearchBestDto.class);
-                        totalResults = body.getContext().getTotalResults();
-                        status = body.getContext().getStatus();
-                        System.out.printf("%d(%s)\n", totalResults, status);
-                        if(totalResults!=0){
-                            convertToEntireFlights(journeyId, body);
-                        }
-                        if(totalResults < 50 && status.equals("incomplete")) {
-                            TimeUnit.SECONDS.sleep(1);
-                        }
-                        else{ break; }
+            for(Airport destination: destinations) {
+                while(true) {
+                    result = getData(adults, origin, destination.getIata(), departureDate, returnDate);
+                    body = objectMapper.convertValue(result.get("body"), SkyScannerSearchBestDto.class);
+                    totalResults = body.getContext().getTotalResults();
+                    status = body.getContext().getStatus();
+                    System.out.printf("%d(%s)\n", totalResults, status);
+                    if(totalResults!=0){
+                        convertToEntireFlights(journeyId, body);
                     }
+                    if(totalResults < 20 && status.equals("incomplete")) {
+                        TimeUnit.SECONDS.sleep(1);
+                    }
+                    else{ break; }
                 }
             }
         }

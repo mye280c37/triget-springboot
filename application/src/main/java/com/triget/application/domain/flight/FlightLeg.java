@@ -34,13 +34,13 @@ public class FlightLeg {
     @Field("airport_change_in")
     private List<String> airportChangeIn;
     @Nullable
-    private List<FlightSegment> flightSegments;
+    private List<FlightSegment> segments;
 
     @Builder
     public FlightLeg(String skyScannerId, String origin, String destination, String departure,
                      String arrival, int durationInMinutes, int timeDeltaInDays, int stopCount,
                      @Nullable Boolean isSmallestStops, List<Airline> operations, @Nullable List<String> airportChangeIn,
-                     @Nullable List<FlightSegment> flightSegments)
+                     @Nullable List<FlightSegment> segments)
     {
         this.skyScannerId = skyScannerId;
         this.origin = origin;
@@ -53,6 +53,6 @@ public class FlightLeg {
         this.isSmallestStops = isSmallestStops;
         this.operations = operations;
         this.airportChangeIn = airportChangeIn;
-        this.flightSegments = flightSegments;
+        this.segments = segments;
     }
 }

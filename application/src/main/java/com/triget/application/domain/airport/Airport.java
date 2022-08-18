@@ -15,7 +15,6 @@ public class Airport {
     private String name;
     private float longitude;
     private float latitude;
-    private String searchName;
     private String cityInEnglish;
 
     @Builder

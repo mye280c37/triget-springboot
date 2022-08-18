@@ -7,6 +7,8 @@ import com.triget.application.domain.restaurant.Restaurant;
 import com.triget.application.service.ProductListServiceImpl;
 import com.triget.application.web.dto.EntireProductListRequestDto;
 import com.triget.application.web.dto.EntireProductListResponseDto;
+import com.triget.application.web.dto.ProductPageResponseDto;
+import com.triget.application.web.dto.flight.FlightPageResponseDto;
 import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -37,25 +39,25 @@ public class ProductListController {
     }
 
     @GetMapping("/product/list/flights")
-    public Page<Flight> returnFlightsList(@RequestParam("journeyId") String journeyId,
-                                          @RequestParam("page") int page) {
+    public FlightPageResponseDto returnFlightsList(@RequestParam("journeyId") String journeyId,
+                                                   @RequestParam("page") int page) {
         return productListServiceImpl.findFlights(journeyId, page);
     }
 
     @GetMapping("/product/list/accommodations")
-    public Page<Accommodation> returnAccommodationsList(@RequestParam("journeyId") String journeyId,
-                                                        @RequestParam("page") int page) {
+    public ProductPageResponseDto returnAccommodationsList(@RequestParam("journeyId") String journeyId,
+                                                           @RequestParam("page") int page) {
         return productListServiceImpl.findAccommodations(journeyId, page);
     }
 
     @GetMapping("/product/list/restaurants")
-    public Page<Restaurant> returnRestaurantsList(@RequestParam("journeyId") String journeyId,
+    public ProductPageResponseDto returnRestaurantsList(@RequestParam("journeyId") String journeyId,
                                                   @RequestParam("page") int page) {
         return productListServiceImpl.findRestaurants(journeyId, page);
     }
 
     @GetMapping("/product/list/attractions")
-    public Page<Attraction> returnAttractionsList(@RequestParam("journeyId") String journeyId,
+    public ProductPageResponseDto returnAttractionsList(@RequestParam("journeyId") String journeyId,
                                                   @RequestParam("page") int page) {
         return productListServiceImpl.findAttractions(journeyId, page);
     }

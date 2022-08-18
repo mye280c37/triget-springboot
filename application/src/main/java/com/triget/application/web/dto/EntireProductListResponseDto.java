@@ -4,6 +4,7 @@ import com.triget.application.domain.accommodation.Accommodation;
 import com.triget.application.domain.attraction.Attraction;
 import com.triget.application.domain.flight.Flight;
 import com.triget.application.domain.restaurant.Restaurant;
+import com.triget.application.web.dto.flight.FlightPageResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class EntireProductListResponseDto {
     private float accommodationsBudget;
     private float restaurantsBudget;
     private float attractionsBudget;
-    private Page<Flight> flights;
+    private FlightPageResponseDto flights;
     private ProductPageResponseDto accommodations;
     private ProductPageResponseDto restaurants;
     private ProductPageResponseDto attractions;
@@ -27,7 +28,7 @@ public class EntireProductListResponseDto {
     @Builder
     public EntireProductListResponseDto(String journeyId, float flightsBudget, float accommodationsBudget,
                                         float restaurantsBudget, float attractionsBudget,
-                                        Page<Flight> flights, ProductPageResponseDto accommodations,
+                                        FlightPageResponseDto flights, ProductPageResponseDto accommodations,
                                         ProductPageResponseDto restaurants, ProductPageResponseDto attractions)
     {
         this.journeyId = journeyId;
