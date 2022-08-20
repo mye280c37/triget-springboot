@@ -16,7 +16,6 @@ import com.triget.application.domain.place.Place;
 import com.triget.application.domain.place.PlaceRepository;
 import com.triget.application.domain.restaurant.Restaurant;
 import com.triget.application.domain.restaurant.RestaurantRepository;
-import com.triget.application.domain.theme.JourneyThemeRepository;
 import com.triget.application.web.dto.*;
 import com.triget.application.web.dto.flight.FlightLegResponseDto;
 import com.triget.application.web.dto.flight.FlightPageResponseDto;
@@ -33,12 +32,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.Future;
 
 @Service
 public class ProductListServiceImpl implements ProductListService {
 
     private final JourneyRepository journeyRepository;
-    private final JourneyThemeRepository journeyThemeRepository;
     private final AccommodationRepository accommodationRepository;
     private final RestaurantRepository restaurantRepository;
     private final AttractionRepository attractionRepository;
@@ -50,7 +49,6 @@ public class ProductListServiceImpl implements ProductListService {
 
     @Autowired
     public ProductListServiceImpl(JourneyRepository journeyRepository,
-                                  JourneyThemeRepository journeyThemeRepository,
                                   AccommodationRepository accommodationRepository,
                                   RestaurantRepository restaurantRepository,
                                   AttractionRepository attractionRepository,
@@ -61,7 +59,6 @@ public class ProductListServiceImpl implements ProductListService {
                                   SkyScannerFlightsInterface skyScannerFlightsInterface)
     {
         this.journeyRepository = journeyRepository;
-        this.journeyThemeRepository = journeyThemeRepository;
         this.accommodationRepository = accommodationRepository;
         this.restaurantRepository = restaurantRepository;
         this.attractionRepository = attractionRepository;
@@ -75,7 +72,6 @@ public class ProductListServiceImpl implements ProductListService {
     @Transactional
     @Override
     public ObjectId saveRequestDto(EntireProductListRequestDto dto) throws NullPointerException {
-        //JourneyTheme journeyTheme = journeyThemeRepository.findByKoreanName(dto.getTheme()).orElse(null);
         return journeyRepository.save(dto.toEntity()).getId();
     }
 
@@ -98,9 +94,9 @@ public class ProductListServiceImpl implements ProductListService {
 
         float remainBudget = journey.getBudget();
         float flightsBudget = journey.getFlightsBudget();
-        float accommodationsBudget = journey.getAccommodationsBudget();
-        float restaurantsBudget = journey.getRestaurantsBudget();
-        float attractionsBudget = journey.getAttractionsBudget();
+        float accommodationsBudget;
+        float restaurantsBudget;
+        float attractionsBudget;
         float margin = (float) (remainBudget*0.03);
 
         List<Flight> flights = flightRepository.findByJourneyId(journey.getId().toString(), sortByPrice());
@@ -116,8 +112,6 @@ public class ProductListServiceImpl implements ProductListService {
         restaurantsBudget = ((float) restaurantsPrior/priorSum)*remainBudget;
         attractionsBudget = ((float) attractionsPrior/priorSum)*remainBudget;
 
-        float exchangeRate = (float) 9.79;
-
         List<Accommodation> accommodations = accommodationRepository.findByCityAndKeywordsAndPriceLess(
                 city,
                 accommodationsBudget,
@@ -128,9 +122,8 @@ public class ProductListServiceImpl implements ProductListService {
             accommodations  = accommodationRepository.findAllByCity(
                     city,
                     sortByPrice());
-            float minAccommodationsPriceByKrw = accommodations.get(0).getPrice()*exchangeRate;
-            float maxAccommodationsPriceByKrw = accommodations.get(accommodations.size()-1).getPrice()*exchangeRate;
-            System.out.printf("price(JPY): %.1f, %.1f\n", accommodations.get(0).getPrice(), accommodations.get(accommodations.size()-1).getPrice());
+            float minAccommodationsPriceByKrw = accommodations.get(0).getPrice();
+            float maxAccommodationsPriceByKrw = accommodations.get(accommodations.size()-1).getPrice();
             if (accommodationsBudget < minAccommodationsPriceByKrw){
                 accommodationsBudget = minAccommodationsPriceByKrw + margin;
             } else if (maxAccommodationsPriceByKrw < accommodationsBudget) {
@@ -156,7 +149,7 @@ public class ProductListServiceImpl implements ProductListService {
 
         journey.ifPresent(obj -> {
             try {
-                skyScannerFlightsInterface.addFlights(obj);
+                List<Future<Object>> futures = skyScannerFlightsInterface.addFlights(obj);
                 computePriors(obj);
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
@@ -182,8 +175,6 @@ public class ProductListServiceImpl implements ProductListService {
                 Sort.by("rating").descending().and(Sort.by("popularity").descending())
         );
 
-        float exchangeRate = (float) 9.79;
-
         return EntireProductListResponseDto.builder()
                 .journeyId(journeyId.toString())
                 .flightsBudget(flightsBudget)
@@ -197,7 +188,7 @@ public class ProductListServiceImpl implements ProductListService {
                 )))
                 .accommodations(mapAccommodationPageResponseDto(accommodationRepository.findByCityAndKeywordsAndPriceLess(
                         city,
-                        accommodationsBudget / exchangeRate,
+                        accommodationsBudget,
                         theme,
                         pageRequest
                 )))
@@ -242,11 +233,9 @@ public class ProductListServiceImpl implements ProductListService {
                 Sort.by("rating").descending().and(Sort.by("popularity").descending())
         );
 
-        float exchangeRate = (float) 9.79;
-
         return mapAccommodationPageResponseDto(accommodationRepository.findByCityAndKeywordsAndPriceLess(
                 city,
-                accommodationsBudget/exchangeRate,
+                accommodationsBudget,
                 theme,
                 pageRequest
         ));

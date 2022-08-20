@@ -29,18 +29,19 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 @Service
 public class SkyScannerFlightsInterface {
     @Value("${apiKey.rapidApi}")
     private String API_KEY;
     @Autowired
-    AirlineRepository airlineRepository;
+    private AirlineRepository airlineRepository;
     @Autowired
-    FlightRepository flightRepository;
+    private FlightRepository flightRepository;
     @Autowired
-    AirportRepository airportRepository;
+    private AirportRepository airportRepository;
+
 
     private String setUrl(int adults, String origin, String destination, String departureDate, String returnDate) {
         return String.format("https://skyscanner44.p.rapidapi.com/search?adults=%d&origin=%s&destination=%s&departureDate=%s&returnDate=%s&currency=KRW",
@@ -205,7 +206,7 @@ public class SkyScannerFlightsInterface {
     }
 
     @Transactional
-    public void addFlights(Journey journey) throws InterruptedException {
+    public List<Future<Object>> addFlights(Journey journey) throws InterruptedException {
         String journeyId = journey.getId().toString();
         int adults = journey.getPeopleNum();
         //List<String> origins = new ArrayList<>(List.of(new String[]{"ICN", "GMP"}));
@@ -216,27 +217,33 @@ public class SkyScannerFlightsInterface {
 
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-        SkyScannerSearchBestDto body;
-        HashMap<String,Object> result;
-        int totalResults;
-        String status;
+
+        ExecutorService executorService = Executors.newFixedThreadPool(destinations.size());
+        List<Callable<Object>> calls = new ArrayList<Callable<Object>>();
         if(flightRepository.findByJourneyId(journeyId).size() == 0) {
             for(Airport destination: destinations) {
-                while(true) {
-                    result = getData(adults, origin, destination.getIata(), departureDate, returnDate);
-                    body = objectMapper.convertValue(result.get("body"), SkyScannerSearchBestDto.class);
-                    totalResults = body.getContext().getTotalResults();
-                    status = body.getContext().getStatus();
-                    System.out.printf("%d(%s)\n", totalResults, status);
-                    if(totalResults!=0){
-                        convertToEntireFlights(journeyId, body);
+                calls.add(Executors.callable(()->{
+                    while(true) {
+                        HashMap<String,Object> result = getData(adults, origin, destination.getIata(), departureDate, returnDate);
+                        SkyScannerSearchBestDto body = objectMapper.convertValue(result.get("body"), SkyScannerSearchBestDto.class);
+                        int totalResults = body.getContext().getTotalResults();
+                        String status = body.getContext().getStatus();
+                        System.out.printf("%d(%s)\n", totalResults, status);
+                        if(totalResults!=0){
+                            convertToEntireFlights(journeyId, body);
+                        }
+                        if(totalResults < 20 && status.equals("incomplete")) {
+                            try {
+                                TimeUnit.SECONDS.sleep(2);
+                            } catch (InterruptedException e) {
+                                throw new RuntimeException(e);
+                            }
+                        }
+                        else{ break; }
                     }
-                    if(totalResults < 20 && status.equals("incomplete")) {
-                        TimeUnit.SECONDS.sleep(1);
-                    }
-                    else{ break; }
-                }
+                }));
             }
         }
+        return executorService.invokeAll(calls);
     }
 }
