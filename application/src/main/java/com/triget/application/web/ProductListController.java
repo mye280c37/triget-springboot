@@ -16,6 +16,7 @@ import java.text.ParseException;
 @RestController
 @RequestMapping(value = "/product-list/v1")
 @Api(tags = {"상품 추천 API"})
+@CrossOrigin(origins="*", allowedHeaders = "*")
 public class ProductListController {
 
     @Autowired
