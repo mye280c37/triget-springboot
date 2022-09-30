@@ -8,19 +8,19 @@ import java.util.List;
 @Setter
 public class ErrorResponse {
 
-    private String statusCode;
+    private int status;
     private String errorContent;
     private List<String> messages;
 
-    public ErrorResponse(String statusCode, String errorContent, String messages) {
-        this.statusCode = statusCode;
+    public ErrorResponse(int status, String errorContent, String messages) {
+        this.status = status;
         this.errorContent = errorContent;
         this.messages = new ArrayList<>();
         this.messages.add(messages);
     }
 
-    public ErrorResponse(String statusCode, String errorContent, List<String> messages) {
-        this.statusCode = statusCode;
+    public ErrorResponse(int status, String errorContent, List<String> messages) {
+        this.status = status;
         this.errorContent = errorContent;
         this.messages = messages;
     }
