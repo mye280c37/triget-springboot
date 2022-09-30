@@ -1,6 +1,5 @@
 package com.triget.application.service;
 
-import com.triget.application.domain.accommodation.Accommodation;
 import com.triget.application.domain.accommodation.AccommodationRepository;
 import com.triget.application.domain.attraction.AttractionRepository;
 import com.triget.application.domain.journey.JourneyRepository;
@@ -15,21 +14,16 @@ import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.text.ParseException;
-import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ProductListServiceImplTest {
+public class ProductRecommendationServiceImplTest {
 
     @Autowired
     private JourneyRepository journeyRepository;
@@ -42,7 +36,7 @@ public class ProductListServiceImplTest {
     @Autowired
     private AttractionRepository attractionRepository;
     @Autowired
-    private ProductListServiceImpl productListServiceImpl;
+    private ProductRecommendationServiceImpl productListServiceImpl;
     private ObjectId id;
 
     @AfterAll

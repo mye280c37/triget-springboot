@@ -1,7 +1,7 @@
 package com.triget.application.web;
 
 import com.triget.application.common.ErrorResponse;
-import com.triget.application.service.ProductListServiceImpl;
+import com.triget.application.service.ProductRecommendationServiceImpl;
 import com.triget.application.web.dto.EntireProductListRequestDto;
 import com.triget.application.web.dto.EntireProductListResponseDto;
 import com.triget.application.web.dto.ProductPageResponseDto;
@@ -16,7 +16,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.ParseException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -27,10 +26,9 @@ import java.util.stream.Collectors;
 public class ProductListController {
 
     @Autowired
-    private final ProductListServiceImpl productListServiceImpl;
-
+    private final ProductRecommendationServiceImpl productListServiceImpl;
     @Autowired
-    public ProductListController(ProductListServiceImpl productListServiceImpl) {
+    public ProductListController(ProductRecommendationServiceImpl productListServiceImpl) {
         this.productListServiceImpl = productListServiceImpl;
     }
 
@@ -43,9 +41,8 @@ public class ProductListController {
             return ResponseEntity.badRequest().body(new ErrorResponse("400", "Validation failure", errors));
         }
         try {
-            ObjectId journeyId = productListServiceImpl.saveRequestDto(dto);
             return ResponseEntity.ok(
-                    productListServiceImpl.setResponseDto(journeyId)
+                    productListServiceImpl.setResponseDto(productListServiceImpl.saveRequestDto(dto))
             );
         }catch (Exception e){
             // 200 response with 404 status code
@@ -56,35 +53,35 @@ public class ProductListController {
 
     @GetMapping()
     @ApiOperation(value = "해당 여행 스펙에 대한 상품 전체 추천 리스트", response = EntireProductListResponseDto.class)
-    public EntireProductListResponseDto returnEntireProductList(@RequestParam("journeyId") String journeyId) {
-        return productListServiceImpl.setResponseDto(new ObjectId(journeyId));
+    public EntireProductListResponseDto returnEntireProductList(@RequestParam("journeyId") String journeyId) throws Exception {
+        return productListServiceImpl.setResponseDto(journeyId);
     }
 
     @GetMapping("/flights")
     @ApiOperation(value = "항공 상품 추가 추천", response = FlightPageResponseDto.class)
     public FlightPageResponseDto returnFlightsList(@RequestParam("journeyId") String journeyId,
-                                                   @RequestParam("page") int page) {
+                                                   @RequestParam("page") int page) throws Exception {
         return productListServiceImpl.findFlights(journeyId, page);
     }
 
     @GetMapping("/accommodations")
     @ApiOperation(value = "숙박 상품 추가 추천", response = ProductPageResponseDto.class)
     public ProductPageResponseDto returnAccommodationsList(@RequestParam("journeyId") String journeyId,
-                                                           @RequestParam("page") int page) {
+                                                           @RequestParam("page") int page) throws Exception {
         return productListServiceImpl.findAccommodations(journeyId, page);
     }
 
     @GetMapping("/restaurants")
     @ApiOperation(value = "식당 상품 추가 추천", response = ProductPageResponseDto.class)
     public ProductPageResponseDto returnRestaurantsList(@RequestParam("journeyId") String journeyId,
-                                                  @RequestParam("page") int page) {
+                                                  @RequestParam("page") int page) throws Exception {
         return productListServiceImpl.findRestaurants(journeyId, page);
     }
 
     @GetMapping("/attractions")
     @ApiOperation(value = "어트랙션 상품 추가 추천", response = ProductPageResponseDto.class)
     public ProductPageResponseDto returnAttractionsList(@RequestParam("journeyId") String journeyId,
-                                                  @RequestParam("page") int page) {
+                                                  @RequestParam("page") int page) throws Exception {
         return productListServiceImpl.findAttractions(journeyId, page);
     }
 
