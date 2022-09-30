@@ -36,12 +36,12 @@ public class ProductRecommendationServiceImplTest {
     @Autowired
     private AttractionRepository attractionRepository;
     @Autowired
-    private ProductRecommendationServiceImpl productListServiceImpl;
-    private ObjectId id;
+    private ProductRecommendationService productListServiceImpl;
+    private String id;
 
     @AfterAll
     public void deleteAll() {
-        journeyRepository.deleteById(this.id);
+        journeyRepository.deleteById(new ObjectId(this.id));
     }
 
     @Test
@@ -63,7 +63,7 @@ public class ProductRecommendationServiceImplTest {
     }
 
     @Test
-    public void setResponseTest() {
+    public void setResponseTest() throws Exception {
         EntireProductListRequestDto entireProductListRequestDto = EntireProductListRequestDto.builder()
                 .place("Tokyo")
                 .theme("테마")
