@@ -1,14 +1,14 @@
-package com.triget.application.service;
+package com.triget.application.server.service;
 
-import com.triget.application.domain.accommodation.AccommodationRepository;
-import com.triget.application.domain.attraction.AttractionRepository;
-import com.triget.application.domain.journey.JourneyRepository;
-import com.triget.application.domain.restaurant.RestaurantRepository;
-import com.triget.application.domain.theme.JourneyThemeRepository;
-import com.triget.application.web.dto.EntireProductListRequestDto;
-import com.triget.application.web.dto.EntireProductListResponseDto;
-import com.triget.application.web.dto.ProductPageResponseDto;
-import com.triget.application.web.dto.ProductResponseDto;
+import com.triget.application.server.domain.accommodation.AccommodationRepository;
+import com.triget.application.server.domain.attraction.AttractionRepository;
+import com.triget.application.server.domain.journey.JourneyRepository;
+import com.triget.application.server.domain.restaurant.RestaurantRepository;
+import com.triget.application.server.domain.theme.JourneyThemeRepository;
+import com.triget.application.server.web.dto.EntireProductListRequestDto;
+import com.triget.application.server.web.dto.EntireProductListResponseDto;
+import com.triget.application.server.web.dto.ProductPageResponseDto;
+import com.triget.application.server.web.dto.ProductResponseDto;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;

@@ -1,16 +1,11 @@
-package com.triget.application.service;
+package com.triget.application.server.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.triget.application.domain.airline.Airline;
-import com.triget.application.domain.airline.AirlineRepository;
-import com.triget.application.domain.flight.Flight;
-import com.triget.application.domain.flight.FlightRepository;
-import com.triget.application.domain.flight.FlightLeg;
-import com.triget.application.domain.flight.FlightSegment;
-import com.triget.application.domain.journey.Journey;
-import com.triget.application.domain.journey.JourneyRepository;
-import com.triget.application.domain.theme.JourneyTheme;
-import com.triget.application.domain.theme.JourneyThemeRepository;
+import com.triget.application.server.domain.airline.AirlineRepository;
+import com.triget.application.server.domain.flight.FlightRepository;
+import com.triget.application.server.domain.journey.Journey;
+import com.triget.application.server.domain.journey.JourneyRepository;
+import com.triget.application.server.domain.theme.JourneyTheme;
+import com.triget.application.server.domain.theme.JourneyThemeRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -18,10 +13,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 @ExtendWith(SpringExtension.class)
 @SpringBootTest

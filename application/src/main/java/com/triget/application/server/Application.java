@@ -1,16 +1,23 @@
-package com.triget.application;
+package com.triget.application.server;
 
+import com.triget.application.server.config.properties.AppProperties;
+import com.triget.application.server.config.properties.CorsProperties;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication(scanBasePackages = {
-        "com.triget.application.common",
-        "com.triget.application.config",
-        "com.triget.application.domain",
-        "com.triget.application.oauth",
-        "com.triget.application.service",
-        "com.triget.application.utils",
-        "com.triget.application.web",
+        "com.triget.application.server.common",
+        "com.triget.application.server.config",
+        "com.triget.application.server.domain",
+        "com.triget.application.server.oauth",
+        "com.triget.application.server.service",
+        "com.triget.application.server.utils",
+        "com.triget.application.server.web",
+})
+@EnableConfigurationProperties({
+        CorsProperties.class,
+        AppProperties.class
 })
 public class Application {
     public static void main(String[] args) {
