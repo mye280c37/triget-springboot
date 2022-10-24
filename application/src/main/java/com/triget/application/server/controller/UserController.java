@@ -1,4 +1,4 @@
-package com.triget.application.server.web;
+package com.triget.application.server.controller;
 
 import com.triget.application.server.common.ApiResponse;
 import com.triget.application.server.domain.user.User;

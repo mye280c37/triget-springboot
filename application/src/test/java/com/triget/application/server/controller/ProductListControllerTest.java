@@ -1,4 +1,4 @@
-package com.triget.application.server.web;
+package com.triget.application.server.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;

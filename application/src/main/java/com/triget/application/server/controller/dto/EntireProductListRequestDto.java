@@ -1,4 +1,4 @@
-package com.triget.application.server.web.dto;
+package com.triget.application.server.controller.dto;
 
 import com.triget.application.server.domain.journey.Journey;
 import io.swagger.annotations.ApiModel;

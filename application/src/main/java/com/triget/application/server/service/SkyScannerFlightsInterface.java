@@ -11,7 +11,7 @@ import com.triget.application.server.domain.flight.FlightRepository;
 import com.triget.application.server.domain.flight.FlightLeg;
 import com.triget.application.server.domain.flight.FlightSegment;
 import com.triget.application.server.domain.journey.Journey;
-import com.triget.application.server.web.dto.skyscanner.*;
+import com.triget.application.server.controller.dto.skyscanner.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;

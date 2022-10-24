@@ -1,8 +1,8 @@
-package com.triget.application.server.web.dto.flight;
+package com.triget.application.server.controller.dto.flight;
 
 import com.triget.application.server.domain.flight.FlightSegment;
-import com.triget.application.server.web.dto.AirlineResponseDto;
-import com.triget.application.server.web.dto.AirportResponseDto;
+import com.triget.application.server.controller.dto.AirlineResponseDto;
+import com.triget.application.server.controller.dto.AirportResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

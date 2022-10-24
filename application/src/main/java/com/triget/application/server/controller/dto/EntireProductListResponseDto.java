@@ -1,14 +1,13 @@
-package com.triget.application.server.web.dto;
+package com.triget.application.server.controller.dto;
 
 import com.mongodb.lang.Nullable;
-import com.triget.application.server.web.dto.flight.FlightPageResponseDto;
-import com.triget.application.server.web.dto.flight.FlightResponseDto;
+import com.triget.application.server.controller.dto.flight.FlightPageResponseDto;
+import com.triget.application.server.controller.dto.flight.FlightResponseDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @RequiredArgsConstructor

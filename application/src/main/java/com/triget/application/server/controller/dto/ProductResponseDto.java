@@ -1,4 +1,4 @@
-package com.triget.application.server.web.dto;
+package com.triget.application.server.controller.dto;
 
 import com.triget.application.server.domain.accommodation.Accommodation;
 import com.triget.application.server.domain.attraction.Attraction;

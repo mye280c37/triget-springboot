@@ -1,4 +1,4 @@
-package com.triget.application.server.web.dto;
+package com.triget.application.server.controller.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

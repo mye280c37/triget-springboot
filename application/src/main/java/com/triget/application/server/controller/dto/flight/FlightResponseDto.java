@@ -1,4 +1,4 @@
-package com.triget.application.server.web.dto.flight;
+package com.triget.application.server.controller.dto.flight;
 
 import com.triget.application.server.domain.flight.Flight;
 import lombok.Builder;
