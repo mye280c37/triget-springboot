@@ -12,7 +12,7 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class ProductResponseDto {
+public class ProductResponse {
 
     private String id;
     private String name;
@@ -41,11 +41,11 @@ public class ProductResponseDto {
     private List<String> keywords;
 
     @Builder
-    public ProductResponseDto(String id, String name, String thumbnail, String subcategory,
-                              float longitude, float latitude, String city, String state, @Nullable String country,
-                              String address, float price, String currencyCode, float rating, int popularity,
-                              String detailUrl, @Nullable String productWebsite, @Nullable String weekdayHours,
-                              @Nullable String neighbors, List<String> keywords)
+    public ProductResponse(String id, String name, String thumbnail, String subcategory,
+                           float longitude, float latitude, String city, String state, @Nullable String country,
+                           String address, float price, String currencyCode, float rating, int popularity,
+                           String detailUrl, @Nullable String productWebsite, @Nullable String weekdayHours,
+                           @Nullable String neighbors, List<String> keywords)
     {
         this.id = id;
         this.name = name;
@@ -68,7 +68,7 @@ public class ProductResponseDto {
         this.keywords = keywords;
     }
 
-    public ProductResponseDto(Accommodation accommodation) {
+    public ProductResponse(Accommodation accommodation) {
         this.id = accommodation.get_id().toString();
         this.name = accommodation.getName();
         this.thumbnail = accommodation.getThumbnail();
@@ -86,7 +86,7 @@ public class ProductResponseDto {
         this.keywords = accommodation.getKeywords();
     }
 
-    public ProductResponseDto(Restaurant restaurant) {
+    public ProductResponse(Restaurant restaurant) {
         this.id = restaurant.get_id().toString();
         this.name = restaurant.getName();
         this.thumbnail = restaurant.getThumbnail();
@@ -107,7 +107,7 @@ public class ProductResponseDto {
         this.keywords = restaurant.getKeywords();
     }
 
-    public ProductResponseDto(Attraction attraction) {
+    public ProductResponse(Attraction attraction) {
         this.id = attraction.get_id().toString();
         this.name = attraction.getName();
         this.thumbnail = attraction.getThumbnail();

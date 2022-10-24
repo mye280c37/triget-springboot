@@ -2,8 +2,8 @@ package com.triget.application.server.controller.dto.flight;
 
 import com.mongodb.lang.Nullable;
 import com.triget.application.server.domain.flight.FlightLeg;
-import com.triget.application.server.controller.dto.AirlineResponseDto;
-import com.triget.application.server.controller.dto.AirportResponseDto;
+import com.triget.application.server.controller.dto.AirlineResponse;
+import com.triget.application.server.controller.dto.AirportResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,24 +11,24 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 @Getter
 @RequiredArgsConstructor
-public class FlightLegResponseDto {
-    private AirportResponseDto origin;
-    private AirportResponseDto destination;
+public class FlightLegResponse {
+    private AirportResponse origin;
+    private AirportResponse destination;
     private String departure;
     private String arrival;
     private int durationInMinutes;
     private int timeDeltaInDays;
     private int stopCount;
     private Boolean isSmallestStops;
-    private List<AirlineResponseDto> operations;
+    private List<AirlineResponse> operations;
     @Nullable
     private List<String> airportChangeIn;
     @Nullable
-    private List<FlightSegmentResponseDto> segments;
+    private List<FlightSegmentResponse> segments;
 
     @Builder
-    public FlightLegResponseDto(FlightLeg leg,AirportResponseDto origin, AirportResponseDto destination,
-                                List<AirlineResponseDto> operations, List<FlightSegmentResponseDto> flightSegments){
+    public FlightLegResponse(FlightLeg leg, AirportResponse origin, AirportResponse destination,
+                             List<AirlineResponse> operations, List<FlightSegmentResponse> flightSegments){
         this.origin = origin;
         this.destination = destination;
         this.departure = leg.getDeparture();

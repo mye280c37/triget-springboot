@@ -8,17 +8,17 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 @Getter
 @RequiredArgsConstructor
-public class FlightResponseDto {
+public class FlightResponse {
     private String id;
     private float price;
-    private List<FlightLegResponseDto> legs;
+    private List<FlightLegResponse> legs;
     private float score;
     private String type;
     private int totalStopCounts;
     private String detailUrl;
 
     @Builder
-    public FlightResponseDto(Flight flight, List<FlightLegResponseDto> legs){
+    public FlightResponse(Flight flight, List<FlightLegResponse> legs){
         this.id = flight.get_id().toString();
         this.price = flight.getPrice();
         this.legs = legs;

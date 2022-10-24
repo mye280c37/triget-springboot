@@ -8,14 +8,14 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class FlightPageResponseDto {
-    private List<FlightResponseDto> content;
+public class CustomFlightPage {
+    private List<FlightResponse> content;
     private Boolean last;
     private int numberOfElements;
     private Boolean empty;
 
     @Builder
-    public FlightPageResponseDto(List<FlightResponseDto> content, Boolean last, int numberOfElements, Boolean empty){
+    public CustomFlightPage(List<FlightResponse> content, Boolean last, int numberOfElements, Boolean empty){
         this.content = content;
         this.last = last;
         this.numberOfElements = numberOfElements;

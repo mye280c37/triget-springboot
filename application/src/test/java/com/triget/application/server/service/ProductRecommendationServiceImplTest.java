@@ -5,10 +5,10 @@ import com.triget.application.server.domain.attraction.AttractionRepository;
 import com.triget.application.server.domain.journey.JourneyRepository;
 import com.triget.application.server.domain.restaurant.RestaurantRepository;
 import com.triget.application.server.domain.theme.JourneyThemeRepository;
-import com.triget.application.server.controller.dto.EntireProductListRequestDto;
-import com.triget.application.server.controller.dto.EntireProductListResponseDto;
-import com.triget.application.server.controller.dto.ProductPageResponseDto;
-import com.triget.application.server.controller.dto.ProductResponseDto;
+import com.triget.application.server.controller.dto.ProductRecommendationRequest;
+import com.triget.application.server.controller.dto.ProductRecommendationResponse;
+import com.triget.application.server.controller.dto.CustomProductPage;
+import com.triget.application.server.controller.dto.ProductResponse;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
@@ -46,7 +46,7 @@ public class ProductRecommendationServiceImplTest {
 
     @Test
     public void testSaveRequestDto() throws ParseException {
-        EntireProductListRequestDto entireProductListRequestDto = EntireProductListRequestDto.builder()
+        ProductRecommendationRequest productRecommendationRequest = ProductRecommendationRequest.builder()
                 .place("Tokyo")
                 .theme("테마")
                 .peopleNum(2)
@@ -58,13 +58,13 @@ public class ProductRecommendationServiceImplTest {
                 .restaurantsPrior(4)
                 .attractionsPrior(3)
                 .build();
-        id=productListServiceImpl.saveRequestDto(entireProductListRequestDto);
+        id=productListServiceImpl.saveRequestDto(productRecommendationRequest);
         System.out.print(id);
     }
 
     @Test
     public void setResponseTest() throws Exception {
-        EntireProductListRequestDto entireProductListRequestDto = EntireProductListRequestDto.builder()
+        ProductRecommendationRequest productRecommendationRequest = ProductRecommendationRequest.builder()
                 .place("Tokyo")
                 .theme("테마")
                 .peopleNum(2)
@@ -77,13 +77,13 @@ public class ProductRecommendationServiceImplTest {
                 .attractionsPrior(3)
                 .build();
 
-        id = productListServiceImpl.saveRequestDto(entireProductListRequestDto);
-        EntireProductListResponseDto entireProductListResponseDto = productListServiceImpl.setResponseDto(id);
+        id = productListServiceImpl.saveRequestDto(productRecommendationRequest);
+        ProductRecommendationResponse productRecommendationResponse = productListServiceImpl.setResponseDto(id);
         float margin = (float) 0.03*4000000;
-        float accommodationBudget = entireProductListResponseDto.getAccommodationsBudget();
+        float accommodationBudget = productRecommendationResponse.getAccommodationsBudget();
         System.out.printf("min: %f ~ max: %f\n", accommodationBudget-margin, accommodationBudget+margin);
-        ProductPageResponseDto accommodationPage = entireProductListResponseDto.getAccommodations();
-        for(ProductResponseDto item : accommodationPage.getContent()){
+        CustomProductPage accommodationPage = productRecommendationResponse.getAccommodations();
+        for(ProductResponse item : accommodationPage.getContent()){
             System.out.printf("name: %s, price:%f, rating: %f, popularity: %d\n", item.getName(), item.getPrice(), item.getRating(), item.getPopularity());
         }
     }

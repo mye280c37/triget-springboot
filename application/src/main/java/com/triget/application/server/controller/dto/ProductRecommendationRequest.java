@@ -11,7 +11,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
 @ApiModel(value = "여행 스펙 정보", description = "상품 추천을 위해 필요한 사용자의 여행 정보")
-public class EntireProductListRequestDto {
+public class ProductRecommendationRequest {
 
     @NotBlank(message = "place is mandatory")
     @ApiModelProperty(value = "여행 장소", example = "도쿄")
@@ -53,9 +53,9 @@ public class EntireProductListRequestDto {
     private final int attractionsPrior;
 
     @Builder
-    public EntireProductListRequestDto(String place, String theme, int peopleNum, String departureDate, String arrivalDate,
-                                       String departureAirport, int budget, int flightsPrior, int accommodationsPrior,
-                                       int restaurantsPrior, int attractionsPrior) {
+    public ProductRecommendationRequest(String place, String theme, int peopleNum, String departureDate, String arrivalDate,
+                                        String departureAirport, int budget, int flightsPrior, int accommodationsPrior,
+                                        int restaurantsPrior, int attractionsPrior) {
         this.place = place;
         this.theme = theme;
         this.peopleNum = peopleNum;

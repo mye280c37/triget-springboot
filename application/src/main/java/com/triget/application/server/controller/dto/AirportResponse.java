@@ -7,7 +7,7 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class AirportResponseDto {
+public class AirportResponse {
     private String id;
     private String iata;
     private String name;
@@ -16,7 +16,7 @@ public class AirportResponseDto {
     private String cityInEnglish;
 
     @Builder
-    public AirportResponseDto(Airport airport) {
+    public AirportResponse(Airport airport) {
         this.id = airport.get_id().toString();
         this.iata = airport.getIata();
         this.name = airport.getName();

@@ -1,27 +1,27 @@
 package com.triget.application.server.controller.dto.flight;
 
 import com.triget.application.server.domain.flight.FlightSegment;
-import com.triget.application.server.controller.dto.AirlineResponseDto;
-import com.triget.application.server.controller.dto.AirportResponseDto;
+import com.triget.application.server.controller.dto.AirlineResponse;
+import com.triget.application.server.controller.dto.AirportResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public class FlightSegmentResponseDto {
+public class FlightSegmentResponse {
     private int order;
-    private AirportResponseDto origin;
-    private AirportResponseDto destination;
+    private AirportResponse origin;
+    private AirportResponse destination;
     private String departure;
     private String arrival;
     private int durationInMinutes;
     private String flightNumber;
-    private AirlineResponseDto operation;
+    private AirlineResponse operation;
 
     @Builder
-    public FlightSegmentResponseDto(FlightSegment segment, AirportResponseDto origin, AirportResponseDto destination,
-                                    AirlineResponseDto operation) {
+    public FlightSegmentResponse(FlightSegment segment, AirportResponse origin, AirportResponse destination,
+                                 AirlineResponse operation) {
         this.order = segment.getOrder();
         this.origin = origin;
         this.destination = destination;

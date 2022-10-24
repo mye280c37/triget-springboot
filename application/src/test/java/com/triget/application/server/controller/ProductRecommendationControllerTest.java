@@ -17,8 +17,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(SpringExtension.class)
-@WebMvcTest(controllers = ProductListController.class)
-public class ProductListControllerTest {
+@WebMvcTest(controllers = ProductRecommendationController.class)
+public class ProductRecommendationControllerTest {
 
     @Autowired
     private MockMvc mvc;

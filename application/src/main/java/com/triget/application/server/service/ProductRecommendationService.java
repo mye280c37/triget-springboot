@@ -10,10 +10,10 @@ import com.triget.application.server.domain.flight.FlightSegment;
 import com.triget.application.server.domain.journey.Journey;
 import com.triget.application.server.domain.restaurant.Restaurant;
 import com.triget.application.server.controller.dto.*;
-import com.triget.application.server.controller.dto.flight.FlightLegResponseDto;
-import com.triget.application.server.controller.dto.flight.FlightPageResponseDto;
-import com.triget.application.server.controller.dto.flight.FlightResponseDto;
-import com.triget.application.server.controller.dto.flight.FlightSegmentResponseDto;
+import com.triget.application.server.controller.dto.flight.FlightLegResponse;
+import com.triget.application.server.controller.dto.flight.CustomFlightPage;
+import com.triget.application.server.controller.dto.flight.FlightResponse;
+import com.triget.application.server.controller.dto.flight.FlightSegmentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
@@ -50,12 +50,12 @@ public class ProductRecommendationService {
     }
 
     @Transactional
-    public String saveRequestDto(EntireProductListRequestDto dto) throws NullPointerException {
+    public String saveRequestDto(ProductRecommendationRequest dto) throws NullPointerException {
         return journeyService.createJourney(dto);
     }
 
     @Transactional(readOnly = true)
-    public EntireProductListResponseDto setResponseDto(String journeyId) throws Exception {
+    public ProductRecommendationResponse setResponseDto(String journeyId) throws Exception {
         Journey journey = journeyService.findById(journeyId);
         try {
             List<Future<Object>> futures = skyScannerFlightsInterface.addFlights(journey);
@@ -72,7 +72,7 @@ public class ProductRecommendationService {
         float restaurantsBudget = journey.getRestaurantsBudget();
         float attractionsBudget = journey.getAttractionsBudget();
 
-        return EntireProductListResponseDto.builder()
+        return ProductRecommendationResponse.builder()
                 .journeyId(journeyId)
                 .flightsBudget(flightsBudget)
                 .accommodationsBudget(accommodationsBudget)
@@ -85,12 +85,12 @@ public class ProductRecommendationService {
                 .build();
     }
 
-    public FlightPageResponseDto findFlights(String journeyId, int page) {
+    public CustomFlightPage findFlights(String journeyId, int page) {
         Journey journey = journeyService.findById(journeyId);
         return mapFlightPageResponseDto(flightService.getFlightPage(journeyId, journey.getFlightsBudget(), page));
     }
 
-    public ProductPageResponseDto findAccommodations(String journeyId, int page) {
+    public CustomProductPage findAccommodations(String journeyId, int page) {
         Journey journey = journeyService.findById(journeyId);
         String placeSearchName = placeService.getSearchName(journey.getPlace());
         String theme = journey.getTheme();
@@ -99,56 +99,56 @@ public class ProductRecommendationService {
         return mapAccommodationPageResponseDto(productService.getAccommodationPage(placeSearchName, theme, accommodationsBudget, page));
     }
 
-    public ProductPageResponseDto findRestaurants(String journeyId, int page) {
+    public CustomProductPage findRestaurants(String journeyId, int page) {
         Journey journey = journeyService.findById(journeyId);
         String placeSearchName = placeService.getSearchName(journey.getPlace());
         String theme = journey.getTheme();
         return mapRestaurantPageResponseDto(productService.getRestaurantPage(placeSearchName, theme, page));
     }
 
-    public ProductPageResponseDto findAttractions(String journeyId, int page) {
+    public CustomProductPage findAttractions(String journeyId, int page) {
         Journey journey = journeyService.findById(journeyId);
         String placeSearchName = placeService.getSearchName(journey.getPlace());
         String theme = journey.getTheme();
         return mapAttractionPageResponseDto(productService.getAttractionPage(placeSearchName, theme, page));
     }
 
-    public FlightPageResponseDto mapFlightPageResponseDto(Page<Flight> flightPage) {
-        return FlightPageResponseDto.builder()
+    public CustomFlightPage mapFlightPageResponseDto(Page<Flight> flightPage) {
+        return CustomFlightPage.builder()
                 .content(flightPage.getContent().stream().map(item->{
-                    List<FlightLegResponseDto> legs = new ArrayList<>();
+                    List<FlightLegResponse> legs = new ArrayList<>();
                     for (FlightLeg leg: item.getLegs()){
                         List<FlightSegment> flightSegments = leg.getSegments();
-                        List<FlightSegmentResponseDto> segments = new ArrayList<>();
+                        List<FlightSegmentResponse> segments = new ArrayList<>();
                         if (flightSegments != null){
                             for (FlightSegment segment: flightSegments) {
-                                segments.add(FlightSegmentResponseDto.builder()
+                                segments.add(FlightSegmentResponse.builder()
                                         .segment(segment)
-                                        .origin(AirportResponseDto.builder()
+                                        .origin(AirportResponse.builder()
                                                 .airport(airportRepository.findByIata(segment.getOrigin()).orElse(null))
                                                 .build())
-                                        .destination(AirportResponseDto.builder()
+                                        .destination(AirportResponse.builder()
                                                 .airport(airportRepository.findByIata(segment.getDestination()).orElse(null))
                                                 .build())
-                                        .operation(AirlineResponseDto.builder()
+                                        .operation(AirlineResponse.builder()
                                                 .airline(airlineRepository.findById(segment.getOperation().get_id()).orElse(null))
                                                 .build())
                                         .build());
                             }
                         }
-                        legs.add(FlightLegResponseDto.builder()
+                        legs.add(FlightLegResponse.builder()
                                 .leg(leg)
-                                .origin(AirportResponseDto.builder()
+                                .origin(AirportResponse.builder()
                                         .airport(airportRepository.findByIata(leg.getOrigin()).orElse(null))
                                         .build())
-                                .destination(AirportResponseDto.builder()
+                                .destination(AirportResponse.builder()
                                         .airport(airportRepository.findByIata(leg.getDestination()).orElse(null))
                                         .build())
-                                .operations(leg.getOperations().stream().map(AirlineResponseDto::new).toList())
+                                .operations(leg.getOperations().stream().map(AirlineResponse::new).toList())
                                 .flightSegments(segments)
                                 .build());
                     }
-                    return FlightResponseDto.builder()
+                    return FlightResponse.builder()
                             .flight(item)
                             .legs(legs)
                             .build();
@@ -159,27 +159,27 @@ public class ProductRecommendationService {
                 .build();
     }
 
-    public ProductPageResponseDto mapAccommodationPageResponseDto(Page<Accommodation> accommodationPage) {
-        return ProductPageResponseDto.builder()
-                .content(accommodationPage.getContent().stream().map(ProductResponseDto::new).toList())
+    public CustomProductPage mapAccommodationPageResponseDto(Page<Accommodation> accommodationPage) {
+        return CustomProductPage.builder()
+                .content(accommodationPage.getContent().stream().map(ProductResponse::new).toList())
                 .numberOfElements(accommodationPage.getNumberOfElements())
                 .last(accommodationPage.isLast())
                 .empty(accommodationPage.isEmpty())
                 .build();
     }
 
-    public ProductPageResponseDto mapRestaurantPageResponseDto(Page<Restaurant> restaurantPage) {
-        return ProductPageResponseDto.builder()
-                .content(restaurantPage.getContent().stream().map(ProductResponseDto::new).toList())
+    public CustomProductPage mapRestaurantPageResponseDto(Page<Restaurant> restaurantPage) {
+        return CustomProductPage.builder()
+                .content(restaurantPage.getContent().stream().map(ProductResponse::new).toList())
                 .numberOfElements(restaurantPage.getNumberOfElements())
                 .last(restaurantPage.isLast())
                 .empty(restaurantPage.isEmpty())
                 .build();
     }
 
-    public ProductPageResponseDto mapAttractionPageResponseDto(Page<Attraction> attractionPage) {
-        return ProductPageResponseDto.builder()
-                .content(attractionPage.getContent().stream().map(ProductResponseDto::new).toList())
+    public CustomProductPage mapAttractionPageResponseDto(Page<Attraction> attractionPage) {
+        return CustomProductPage.builder()
+                .content(attractionPage.getContent().stream().map(ProductResponse::new).toList())
                 .numberOfElements(attractionPage.getNumberOfElements())
                 .last(attractionPage.isLast())
                 .empty(attractionPage.isEmpty())

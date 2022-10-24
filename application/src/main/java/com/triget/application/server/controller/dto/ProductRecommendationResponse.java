@@ -1,8 +1,8 @@
 package com.triget.application.server.controller.dto;
 
 import com.mongodb.lang.Nullable;
-import com.triget.application.server.controller.dto.flight.FlightPageResponseDto;
-import com.triget.application.server.controller.dto.flight.FlightResponseDto;
+import com.triget.application.server.controller.dto.flight.CustomFlightPage;
+import com.triget.application.server.controller.dto.flight.FlightResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -11,22 +11,22 @@ import java.util.ArrayList;
 
 @Getter
 @RequiredArgsConstructor
-public class EntireProductListResponseDto {
+public class ProductRecommendationResponse {
     private String journeyId;
     private float flightsBudget;
     private float accommodationsBudget;
     private float restaurantsBudget;
     private float attractionsBudget;
-    private FlightPageResponseDto flights;
-    private ProductPageResponseDto accommodations;
-    private ProductPageResponseDto restaurants;
-    private ProductPageResponseDto attractions;
+    private CustomFlightPage flights;
+    private CustomProductPage accommodations;
+    private CustomProductPage restaurants;
+    private CustomProductPage attractions;
 
     @Builder
-    public EntireProductListResponseDto(String journeyId, float flightsBudget, float accommodationsBudget,
-                                        float restaurantsBudget, float attractionsBudget,
-                                        @Nullable FlightPageResponseDto flights, ProductPageResponseDto accommodations,
-                                        ProductPageResponseDto restaurants, ProductPageResponseDto attractions)
+    public ProductRecommendationResponse(String journeyId, float flightsBudget, float accommodationsBudget,
+                                         float restaurantsBudget, float attractionsBudget,
+                                         @Nullable CustomFlightPage flights, CustomProductPage accommodations,
+                                         CustomProductPage restaurants, CustomProductPage attractions)
     {
         this.journeyId = journeyId;
         this.flightsBudget = flightsBudget;
@@ -34,8 +34,8 @@ public class EntireProductListResponseDto {
         this.restaurantsBudget = restaurantsBudget;
         this.attractionsBudget = attractionsBudget;
         //this.flights = flights;
-        this.flights = FlightPageResponseDto.builder()
-                .content(new ArrayList<FlightResponseDto>())
+        this.flights = CustomFlightPage.builder()
+                .content(new ArrayList<FlightResponse>())
                 .last(true)
                 .numberOfElements(0)
                 .empty(true)

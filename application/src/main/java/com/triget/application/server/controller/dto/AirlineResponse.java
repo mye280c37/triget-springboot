@@ -6,14 +6,14 @@ import lombok.Getter;
 import org.springframework.lang.Nullable;
 
 @Getter
-public class AirlineResponseDto {
+public class AirlineResponse {
     private String id;
     private String name;
     @Nullable
     private String logoUrl;
 
     @Builder
-    public AirlineResponseDto(Airline airline) {
+    public AirlineResponse(Airline airline) {
         this.id = airline.get_id().toString();
         this.name = airline.getName();
         this.logoUrl = airline.getLogoUrl();
