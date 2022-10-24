@@ -9,11 +9,12 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
 @SpringBootApplication(scanBasePackages = {
         "com.triget.application.server.common",
         "com.triget.application.server.config",
+        "com.triget.application.server.controller",
         "com.triget.application.server.domain",
         "com.triget.application.server.oauth",
         "com.triget.application.server.service",
+        "com.triget.application.server.repository",
         "com.triget.application.server.utils",
-        "com.triget.application.server.web",
 })
 @EnableConfigurationProperties({
         CorsProperties.class,
