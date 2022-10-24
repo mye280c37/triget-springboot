@@ -1,8 +1,8 @@
 package com.triget.application.server.controller.dto;
 
-import com.triget.application.server.domain.accommodation.Accommodation;
-import com.triget.application.server.domain.attraction.Attraction;
-import com.triget.application.server.domain.restaurant.Restaurant;
+import com.triget.application.server.domain.product.Accommodation;
+import com.triget.application.server.domain.product.Attraction;
+import com.triget.application.server.domain.product.Restaurant;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,7 @@
 package com.triget.application.server.oauth.service;
 
 import com.triget.application.server.domain.user.User;
-import com.triget.application.server.domain.user.UserRepository;
+import com.triget.application.server.repository.user.UserRepository;
 import com.triget.application.server.oauth.entity.ProviderType;
 import com.triget.application.server.oauth.entity.RoleType;
 import com.triget.application.server.oauth.entity.UserPrincipal;

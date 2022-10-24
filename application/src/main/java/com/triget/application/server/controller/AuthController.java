@@ -4,7 +4,7 @@ package com.triget.application.server.controller;
 import com.triget.application.server.common.ApiResponse;
 import com.triget.application.server.config.properties.AppProperties;
 import com.triget.application.server.domain.user.UserRefreshToken;
-import com.triget.application.server.domain.user.UserRefreshTokenRepository;
+import com.triget.application.server.repository.user.UserRefreshTokenRepository;
 import com.triget.application.server.oauth.entity.RoleType;
 import com.triget.application.server.oauth.entity.UserPrincipal;
 import com.triget.application.server.oauth.token.AuthToken;

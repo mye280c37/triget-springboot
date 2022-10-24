@@ -1,6 +1,6 @@
 package com.triget.application.server.controller.dto.flight;
 
-import com.triget.application.server.domain.flight.FlightSegment;
+import com.triget.application.server.domain.product.flight.FlightSegment;
 import com.triget.application.server.controller.dto.AirlineResponse;
 import com.triget.application.server.controller.dto.AirportResponse;
 import lombok.Builder;

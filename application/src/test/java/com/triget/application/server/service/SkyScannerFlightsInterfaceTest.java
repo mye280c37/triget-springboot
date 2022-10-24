@@ -1,11 +1,11 @@
 package com.triget.application.server.service;
 
-import com.triget.application.server.domain.airline.AirlineRepository;
-import com.triget.application.server.domain.flight.FlightRepository;
+import com.triget.application.server.repository.airline.AirlineRepository;
+import com.triget.application.server.repository.product.flight.FlightRepository;
 import com.triget.application.server.domain.journey.Journey;
-import com.triget.application.server.domain.journey.JourneyRepository;
-import com.triget.application.server.domain.theme.JourneyTheme;
-import com.triget.application.server.domain.theme.JourneyThemeRepository;
+import com.triget.application.server.repository.journey.JourneyRepository;
+import com.triget.application.server.domain.journey.JourneyTheme;
+import com.triget.application.server.repository.journey.JourneyThemeRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;

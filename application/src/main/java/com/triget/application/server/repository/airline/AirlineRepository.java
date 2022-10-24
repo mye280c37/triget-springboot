@@ -1,5 +1,6 @@
-package com.triget.application.server.domain.airline;
+package com.triget.application.server.repository.airline;
 
+import com.triget.application.server.domain.airline.Airline;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 

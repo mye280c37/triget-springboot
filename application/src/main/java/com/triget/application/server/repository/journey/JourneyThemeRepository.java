@@ -1,10 +1,10 @@
-package com.triget.application.server.domain.theme;
+package com.triget.application.server.repository.journey;
 
+import com.triget.application.server.domain.journey.JourneyTheme;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
 import java.util.Optional;
 
 @Repository

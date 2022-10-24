@@ -1,4 +1,4 @@
-package com.triget.application.server.domain.restaurant;
+package com.triget.application.server.domain.product;
 
 import lombok.Builder;
 import lombok.Data;

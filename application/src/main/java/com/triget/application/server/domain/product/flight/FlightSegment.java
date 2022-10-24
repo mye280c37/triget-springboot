@@ -1,4 +1,4 @@
-package com.triget.application.server.domain.flight;
+package com.triget.application.server.domain.product.flight;
 
 import com.triget.application.server.domain.airline.Airline;
 import lombok.Builder;

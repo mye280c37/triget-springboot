@@ -1,7 +1,7 @@
 package com.triget.application.server.service;
 
-import com.triget.application.server.domain.flight.Flight;
-import com.triget.application.server.domain.flight.FlightRepository;
+import com.triget.application.server.domain.product.flight.Flight;
+import com.triget.application.server.repository.product.flight.FlightRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;

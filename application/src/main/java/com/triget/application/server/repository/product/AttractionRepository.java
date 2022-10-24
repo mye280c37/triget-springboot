@@ -1,5 +1,6 @@
-package com.triget.application.server.domain.attraction;
+package com.triget.application.server.repository.product;
 
+import com.triget.application.server.domain.product.Attraction;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

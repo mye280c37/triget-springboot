@@ -1,7 +1,7 @@
 package com.triget.application.server.service;
 
 import com.triget.application.server.domain.user.User;
-import com.triget.application.server.domain.user.UserRepository;
+import com.triget.application.server.repository.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

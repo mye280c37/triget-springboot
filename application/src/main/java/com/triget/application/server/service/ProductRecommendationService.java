@@ -1,14 +1,14 @@
 package com.triget.application.server.service;
 
-import com.triget.application.server.domain.accommodation.Accommodation;
-import com.triget.application.server.domain.airline.AirlineRepository;
-import com.triget.application.server.domain.airport.AirportRepository;
-import com.triget.application.server.domain.attraction.Attraction;
-import com.triget.application.server.domain.flight.Flight;
-import com.triget.application.server.domain.flight.FlightLeg;
-import com.triget.application.server.domain.flight.FlightSegment;
+import com.triget.application.server.domain.product.Accommodation;
+import com.triget.application.server.repository.airline.AirlineRepository;
+import com.triget.application.server.repository.airport.AirportRepository;
+import com.triget.application.server.domain.product.Attraction;
+import com.triget.application.server.domain.product.flight.Flight;
+import com.triget.application.server.domain.product.flight.FlightLeg;
+import com.triget.application.server.domain.product.flight.FlightSegment;
 import com.triget.application.server.domain.journey.Journey;
-import com.triget.application.server.domain.restaurant.Restaurant;
+import com.triget.application.server.domain.product.Restaurant;
 import com.triget.application.server.controller.dto.*;
 import com.triget.application.server.controller.dto.flight.FlightLegResponse;
 import com.triget.application.server.controller.dto.flight.CustomFlightPage;

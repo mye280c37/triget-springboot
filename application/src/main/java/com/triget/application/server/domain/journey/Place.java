@@ -1,4 +1,4 @@
-package com.triget.application.server.domain.place;
+package com.triget.application.server.domain.journey;
 
 import lombok.Data;
 import org.bson.types.ObjectId;

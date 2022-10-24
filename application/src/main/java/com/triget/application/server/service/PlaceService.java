@@ -1,8 +1,8 @@
 package com.triget.application.server.service;
 
 import com.triget.application.server.common.ObjectNotFoundException;
-import com.triget.application.server.domain.place.Place;
-import com.triget.application.server.domain.place.PlaceRepository;
+import com.triget.application.server.domain.journey.Place;
+import com.triget.application.server.repository.journey.PlaceRepository;
 import org.springframework.stereotype.Service;
 
 

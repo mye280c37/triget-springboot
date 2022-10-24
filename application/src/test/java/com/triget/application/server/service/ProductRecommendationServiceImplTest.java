@@ -1,10 +1,10 @@
 package com.triget.application.server.service;
 
-import com.triget.application.server.domain.accommodation.AccommodationRepository;
-import com.triget.application.server.domain.attraction.AttractionRepository;
-import com.triget.application.server.domain.journey.JourneyRepository;
-import com.triget.application.server.domain.restaurant.RestaurantRepository;
-import com.triget.application.server.domain.theme.JourneyThemeRepository;
+import com.triget.application.server.repository.product.AccommodationRepository;
+import com.triget.application.server.repository.product.AttractionRepository;
+import com.triget.application.server.repository.journey.JourneyRepository;
+import com.triget.application.server.repository.product.RestaurantRepository;
+import com.triget.application.server.repository.journey.JourneyThemeRepository;
 import com.triget.application.server.controller.dto.ProductRecommendationRequest;
 import com.triget.application.server.controller.dto.ProductRecommendationResponse;
 import com.triget.application.server.controller.dto.CustomProductPage;

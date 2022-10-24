@@ -1,5 +1,6 @@
-package com.triget.application.server.domain.airport;
+package com.triget.application.server.repository.airport;
 
+import com.triget.application.server.domain.airport.Airport;
 import org.bson.types.ObjectId;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

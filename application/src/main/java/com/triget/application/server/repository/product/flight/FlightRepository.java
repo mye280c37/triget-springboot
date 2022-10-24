@@ -1,5 +1,6 @@
-package com.triget.application.server.domain.flight;
+package com.triget.application.server.repository.product.flight;
 
+import com.triget.application.server.domain.product.flight.Flight;
 import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -1,4 +1,4 @@
-package com.triget.application.server.domain.attraction;
+package com.triget.application.server.domain.product;
 
 import lombok.Builder;
 import lombok.Data;
@@ -10,40 +10,39 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import java.util.List;
 
 @Data
-@Document(collection = "attraction")
-public class Attraction {
+@Document(collection = "hotel")
+public class Accommodation {
+
     @Id
     private ObjectId _id;
-    @Field("tripadvisor_id")
-    private String tripadvisorId;
+    @Field("bookings_id")
+    private String bookingsId;
     private String name;
     private String thumbnail;
     private String subcategory;
     private float longitude;
     private float latitude;
     private String city;
+    @Field("district")
     private String state;
-    private String country;
     private String address;
+    private float price;
+    @Field("currency_code")
+    private String currencyCode;
     private float rating;
     private int popularity;
     @Field("detail_url")
     private String detailUrl;
-    @Field("product_website")
-    private String productWebsite;
-    @Field("weekday_hours")
-    private String weekdayHours;
-    private String neighbors;
     private List<String> keywords;
 
     @Builder
-    public Attraction(ObjectId _id, String tripadvisorId, String name, String thumbnail, String subcategory,
-                      float longitude, float latitude, String city, String state, String country,
-                      String address, float rating, int popularity, String detailUrl, String productWebsite,
-                      String weekdayHours, String neighbors, List<String> keywords)
+    public Accommodation(ObjectId _id, String bookingsId, String name, String thumbnail, String subcategory,
+                         float longitude, float latitude, String city, String state, String address,
+                         float price, String currencyCode, float rating, int popularity, String detailUrl,
+                         List<String> keywords)
     {
         this._id = _id;
-        this.tripadvisorId = tripadvisorId;
+        this.bookingsId = bookingsId;
         this.name = name;
         this.thumbnail = thumbnail;
         this.subcategory = subcategory;
@@ -51,15 +50,12 @@ public class Attraction {
         this.latitude = latitude;
         this.city = city;
         this.state = state;
-        this.country = country;
         this.address = address;
+        this.price = price;
+        this.currencyCode = currencyCode;
         this.rating = rating;
         this.popularity = popularity;
         this.detailUrl = detailUrl;
-        this.productWebsite = productWebsite;
-        this.weekdayHours = weekdayHours;
-        this.neighbors = neighbors;
         this.keywords = keywords;
-
     }
 }

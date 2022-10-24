@@ -1,4 +1,4 @@
-package com.triget.application.server.domain.theme;
+package com.triget.application.server.domain.journey;
 
 import lombok.Data;
 

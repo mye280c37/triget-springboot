@@ -1,6 +1,6 @@
 package com.triget.application.domain.journey;
 
-import com.triget.application.server.domain.theme.JourneyThemeRepository;
+import com.triget.application.server.repository.journey.JourneyThemeRepository;
 import org.bson.types.ObjectId;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;

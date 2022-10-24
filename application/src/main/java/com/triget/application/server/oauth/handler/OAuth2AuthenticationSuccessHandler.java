@@ -2,7 +2,7 @@ package com.triget.application.server.oauth.handler;
 
 import com.triget.application.server.config.properties.AppProperties;
 import com.triget.application.server.domain.user.UserRefreshToken;
-import com.triget.application.server.domain.user.UserRefreshTokenRepository;
+import com.triget.application.server.repository.user.UserRefreshTokenRepository;
 import com.triget.application.server.oauth.entity.ProviderType;
 import com.triget.application.server.oauth.entity.RoleType;
 import com.triget.application.server.oauth.info.OAuth2UserInfo;

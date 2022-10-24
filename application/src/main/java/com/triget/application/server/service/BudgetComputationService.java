@@ -1,7 +1,7 @@
 package com.triget.application.server.service;
 
-import com.triget.application.server.domain.accommodation.Accommodation;
-import com.triget.application.server.domain.flight.Flight;
+import com.triget.application.server.domain.product.Accommodation;
+import com.triget.application.server.domain.product.flight.Flight;
 import com.triget.application.server.domain.journey.Journey;
 import org.springframework.stereotype.Service;
 

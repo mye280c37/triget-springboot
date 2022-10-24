@@ -1,11 +1,11 @@
 package com.triget.application.server.service;
 
-import com.triget.application.server.domain.accommodation.Accommodation;
-import com.triget.application.server.domain.accommodation.AccommodationRepository;
-import com.triget.application.server.domain.attraction.Attraction;
-import com.triget.application.server.domain.attraction.AttractionRepository;
-import com.triget.application.server.domain.restaurant.Restaurant;
-import com.triget.application.server.domain.restaurant.RestaurantRepository;
+import com.triget.application.server.domain.product.Accommodation;
+import com.triget.application.server.repository.product.AccommodationRepository;
+import com.triget.application.server.domain.product.Attraction;
+import com.triget.application.server.repository.product.AttractionRepository;
+import com.triget.application.server.domain.product.Restaurant;
+import com.triget.application.server.repository.product.RestaurantRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;

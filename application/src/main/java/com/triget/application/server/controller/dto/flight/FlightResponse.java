@@ -1,6 +1,6 @@
 package com.triget.application.server.controller.dto.flight;
 
-import com.triget.application.server.domain.flight.Flight;
+import com.triget.application.server.domain.product.flight.Flight;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
