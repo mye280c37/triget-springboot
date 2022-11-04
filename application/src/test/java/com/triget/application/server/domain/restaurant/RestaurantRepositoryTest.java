@@ -1,4 +1,4 @@
-package com.triget.application.domain.attraction;
+package com.triget.application.server.domain.restaurant;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -13,10 +13,10 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class AttractionRepositoryTest {
+public class RestaurantRepositoryTest {
 
     @Autowired
-    AttractionRepository attractionRepository;
+    private RestaurantRepository restaurantRepository;
 
     @Test
     public void testFindAllByCity() {
@@ -27,13 +27,13 @@ public class AttractionRepositoryTest {
                 Sort.by("rating").descending().and(Sort.by("popularity").descending())
         );
 
-        Page<Attraction> attractionPage = attractionRepository.findAllByCityAndKeywords(city, "relaxing", pageRequest);
-        int pageSize = attractionPage.getNumberOfElements();
+        Page<Restaurant> restaurantPage = restaurantRepository.findAllByCityAndKeywords(city, "relaxing", pageRequest);
+        int pageSize = restaurantPage.getNumberOfElements();
 
         System.out.printf("\n\nThe Number of Elements: %d\n\n", pageSize);
-        for(Attraction item : attractionPage){
+        for(Restaurant item : restaurantPage){
             System.out.printf("name: %s, rating: %f, popularity: %d\n", item.getName(), item.getRating(), item.getPopularity());
         }
-    }
 
+    }
 }

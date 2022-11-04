@@ -1,4 +1,4 @@
-package com.triget.application.domain.place;
+package com.triget.application.server.domain.airport;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -10,15 +10,15 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class PlaceRepositoryTest {
+public class AirportRepositoryTest {
 
     @Autowired
-    private PlaceRepository placeRepository;
+    private AirportRepository airportRepository;
 
     @Test
-    public void testFindByDisplayName() {
+    public void testFindByContainsPlace() {
         String place = "도쿄";
-        String searchName = placeRepository.findByDisplayName(place).map(Place::getSearchName).orElse("");
-        System.out.print(searchName);
+
+        System.out.print(airportRepository.findByNameContainsString(place).size());
     }
 }

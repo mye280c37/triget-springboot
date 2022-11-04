@@ -1,5 +1,7 @@
-package com.triget.application.domain.accommodation;
+package com.triget.application.server.domain.accommodation;
 
+import com.triget.application.server.domain.product.Accommodation;
+import com.triget.application.server.repository.product.AccommodationRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
