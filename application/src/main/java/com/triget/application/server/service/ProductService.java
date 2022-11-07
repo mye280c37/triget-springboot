@@ -1,11 +1,13 @@
 package com.triget.application.server.service;
 
+import com.triget.application.server.common.ObjectNotFoundException;
 import com.triget.application.server.domain.product.Accommodation;
 import com.triget.application.server.repository.product.AccommodationRepository;
 import com.triget.application.server.domain.product.Attraction;
 import com.triget.application.server.repository.product.AttractionRepository;
 import com.triget.application.server.domain.product.Restaurant;
 import com.triget.application.server.repository.product.RestaurantRepository;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -28,6 +30,24 @@ public class ProductService {
 
     private Sort sortByPrice() {
         return Sort.by(Sort.DEFAULT_DIRECTION, "price");
+    }
+
+    public Accommodation findAccommodationById(String id) {
+        return accommodationRepository.findById(new ObjectId(id)).orElseThrow(
+                () -> new ObjectNotFoundException("No matching restaurant found")
+        );
+    }
+
+    public Restaurant findRestaurantById(String id) {
+        return restaurantRepository.findById(new ObjectId(id)).orElseThrow(
+                () -> new ObjectNotFoundException("No matching restaurant found")
+        );
+    }
+
+    public Attraction findAttractionById(String id) {
+        return attractionRepository.findById(new ObjectId(id)).orElseThrow(
+                () -> new ObjectNotFoundException("No matching restaurant found")
+        );
     }
 
     public List<Accommodation> findByCityAndKeywordsAndPriceLess(String city, String theme, float budget) {

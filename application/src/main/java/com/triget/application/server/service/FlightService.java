@@ -1,7 +1,9 @@
 package com.triget.application.server.service;
 
+import com.triget.application.server.common.ObjectNotFoundException;
 import com.triget.application.server.domain.product.flight.Flight;
 import com.triget.application.server.repository.product.flight.FlightRepository;
+import org.bson.types.ObjectId;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -23,6 +25,12 @@ public class FlightService {
 
     public List<Flight> findByJourneyId(String journeyId) {
         return flightRepository.findByJourneyId(journeyId, sortByPrice());
+    }
+
+    public Flight findById(String id){
+        return flightRepository.findById(new ObjectId(id)).orElseThrow(
+                () -> new ObjectNotFoundException("No matching flight found")
+        );
     }
 
     public Page<Flight> getFlightPage(String journeyId, float budget, int page) {
