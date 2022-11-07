@@ -29,6 +29,8 @@ public class ScheduleService {
     private final FlightService flightService;
     private final AirportService airportService;
     private final ScheduleRepository scheduleRepository;
+    private ProductSet result;
+    private ProductSet visited;
 
     public ScheduleService(ProductService productService, FlightService flightService, AirportRepository airportRepository, JourneyService journeyService, AirportService airportService, ScheduleRepository scheduleRepository) {
         this.productService = productService;
@@ -38,8 +40,8 @@ public class ScheduleService {
         this.scheduleRepository = scheduleRepository;
     }
 
-    public ProductSet getAllProducts(LikeProductList likeProductList) {
-        return new ProductSet(
+    public void getAllProducts(LikeProductList likeProductList) {
+        this.result = new ProductSet(
                 flightService.findById(likeProductList.getFlightId()),
                 new ArrayList<>(likeProductList.getAccommodationIds().stream().map(
                         productService::findAccommodationById
@@ -160,7 +162,7 @@ public class ScheduleService {
         return attraction;
     }
 
-    public List<ProductResponse> setFirstDay(ProductSet result, ProductSet visited) {
+    public List<ProductResponse> setFirstDay() {
         List<ProductResponse> vertices = new ArrayList<>();
         Flight flight = result.getFlight();
         Airport airport = airportService.findByIata(flight.getLegs().get(0).getDestination());
@@ -192,7 +194,7 @@ public class ScheduleService {
         return vertices;
     }
 
-    public List<ProductResponse> setDailySchedule(ProductSet result, ProductSet visited, ProductResponse startPoint) {
+    public List<ProductResponse> setDailySchedule(ProductResponse startPoint) {
         List<ProductResponse> vertices = new ArrayList<>();
         int itemNum = 3;
         for(int i=0; i<itemNum; i++){
@@ -221,7 +223,7 @@ public class ScheduleService {
         return vertices;
     }
 
-    public List<ProductResponse> setLastDay(ProductSet result, ProductSet visited, ProductResponse startPoint) {
+    public List<ProductResponse> setLastDay(ProductResponse startPoint) {
         LocalDateTime endTime = LocalDateTime.parse(result.getFlight().getLegs().get(1).getDeparture());
         List<ProductResponse> vertices = new ArrayList<>();
         int itemNum = getNumPerItem(null, endTime);
@@ -246,8 +248,8 @@ public class ScheduleService {
 
     public Schedule createSchedule(LikeProductList likeProductList) {
         Journey journey = journeyService.findById(likeProductList.getJourneyId());
-        ProductSet result = getAllProducts(likeProductList);
-        ProductSet visited = new ProductSet();
+        getAllProducts(likeProductList);
+        visited = new ProductSet();
 
         LocalDate departureDate = LocalDate.parse(journey.getDepartureDate());
         LocalDate arrivalDate = LocalDate.parse(journey.getArrivalDate());
@@ -255,28 +257,31 @@ public class ScheduleService {
 
         List<DailySchedule> schedules = new ArrayList<>();
 
-        List<ProductResponse> vertices = setFirstDay(result, visited);
+        List<ProductResponse> vertices = setFirstDay();
         schedules.add(DailySchedule.builder()
                 .order(0)
                 .vertices(vertices)
+                .routeNum(vertices.size())
                 .edges(null)
                 .build()
         );
         ProductResponse startPoint = vertices.get(vertices.size()-1);
         for(int i = 1; i < journeyPeriod-1; i++){
-            vertices = setDailySchedule(result, visited, startPoint);
+            vertices = setDailySchedule(startPoint);
             schedules.add(DailySchedule.builder()
                     .order(i)
                     .vertices(vertices)
+                    .routeNum(vertices.size())
                     .edges(null)
                     .build()
             );
             startPoint  = vertices.get(vertices.size()-1);
         }
-        vertices = setLastDay(result, visited, startPoint);
+        vertices = setLastDay(startPoint);
         schedules.add(DailySchedule.builder()
                 .order(journeyPeriod-1)
                 .vertices(vertices)
+                .routeNum(vertices.size())
                 .edges(null)
                 .build()
         );
