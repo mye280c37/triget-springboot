@@ -1,10 +1,10 @@
 package com.triget.application.server.controller;
 
 import com.triget.application.server.service.ProductRecommendationService;
-import com.triget.application.server.controller.dto.ProductRecommendationRequest;
-import com.triget.application.server.controller.dto.ProductRecommendationResponse;
-import com.triget.application.server.controller.dto.CustomProductPage;
-import com.triget.application.server.controller.dto.flight.CustomFlightPage;
+import com.triget.application.server.entity.ProductRecommendationRequest;
+import com.triget.application.server.entity.ProductRecommendationResponse;
+import com.triget.application.server.entity.CustomProductPage;
+import com.triget.application.server.entity.flight.CustomFlightPage;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

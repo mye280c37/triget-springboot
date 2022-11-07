@@ -1,4 +1,4 @@
-package com.triget.application.server.controller.dto;
+package com.triget.application.server.entity;
 
 import lombok.Getter;
 import lombok.Setter;

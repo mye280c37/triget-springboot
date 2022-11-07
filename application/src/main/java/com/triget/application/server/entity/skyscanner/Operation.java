@@ -1,4 +1,4 @@
-package com.triget.application.server.controller.dto.skyscanner;
+package com.triget.application.server.entity.skyscanner;
 
 import lombok.Getter;
 import org.springframework.lang.Nullable;

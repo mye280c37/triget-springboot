@@ -11,7 +11,7 @@ import com.triget.application.server.oauth.token.AuthToken;
 import com.triget.application.server.oauth.token.AuthTokenProvider;
 import com.triget.application.server.utils.CookieUtil;
 import com.triget.application.server.utils.HeaderUtil;
-import com.triget.application.server.controller.dto.AuthReqModel;
+import com.triget.application.server.entity.AuthReqModel;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

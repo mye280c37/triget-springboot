@@ -1,8 +1,8 @@
 package com.triget.application.server.service;
 
 import com.mongodb.lang.Nullable;
-import com.triget.application.server.controller.dto.LikeProductList;
-import com.triget.application.server.controller.dto.ProductResponse;
+import com.triget.application.server.entity.LikeProductList;
+import com.triget.application.server.entity.ProductResponse;
 import com.triget.application.server.domain.airport.Airport;
 import com.triget.application.server.domain.journey.Journey;
 import com.triget.application.server.domain.product.Accommodation;

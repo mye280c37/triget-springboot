@@ -1,7 +1,6 @@
 package com.triget.application.server.domain.schedule;
 
-import com.triget.application.server.controller.dto.CustomProductPage;
-import com.triget.application.server.controller.dto.ProductResponse;
+import com.triget.application.server.entity.ProductResponse;
 import lombok.Builder;
 import lombok.Data;
 import org.bson.types.ObjectId;

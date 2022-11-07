@@ -3,7 +3,7 @@ package com.triget.application.server.service;
 import com.triget.application.server.common.ObjectNotFoundException;
 import com.triget.application.server.domain.journey.Journey;
 import com.triget.application.server.repository.journey.JourneyRepository;
-import com.triget.application.server.controller.dto.ProductRecommendationRequest;
+import com.triget.application.server.entity.ProductRecommendationRequest;
 import org.bson.types.ObjectId;
 import org.springframework.stereotype.Service;
 

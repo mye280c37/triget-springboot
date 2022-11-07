@@ -1,6 +1,6 @@
 package com.triget.application.server.controller;
 
-import com.triget.application.server.controller.dto.LikeProductList;
+import com.triget.application.server.entity.LikeProductList;
 import com.triget.application.server.domain.schedule.Schedule;
 import com.triget.application.server.service.ScheduleService;
 import lombok.RequiredArgsConstructor;

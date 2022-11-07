@@ -1,9 +1,9 @@
-package com.triget.application.server.controller.dto.flight;
+package com.triget.application.server.entity.flight;
 
 import com.mongodb.lang.Nullable;
 import com.triget.application.server.domain.product.flight.FlightLeg;
-import com.triget.application.server.controller.dto.AirlineResponse;
-import com.triget.application.server.controller.dto.AirportResponse;
+import com.triget.application.server.entity.AirlineResponse;
+import com.triget.application.server.entity.AirportResponse;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

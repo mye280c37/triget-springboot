@@ -1,6 +1,7 @@
 package com.triget.application.server.service;
 
 import com.triget.application.server.domain.product.Accommodation;
+import com.triget.application.server.entity.*;
 import com.triget.application.server.repository.airline.AirlineRepository;
 import com.triget.application.server.repository.airport.AirportRepository;
 import com.triget.application.server.domain.product.Attraction;
@@ -9,11 +10,10 @@ import com.triget.application.server.domain.product.flight.FlightLeg;
 import com.triget.application.server.domain.product.flight.FlightSegment;
 import com.triget.application.server.domain.journey.Journey;
 import com.triget.application.server.domain.product.Restaurant;
-import com.triget.application.server.controller.dto.*;
-import com.triget.application.server.controller.dto.flight.FlightLegResponse;
-import com.triget.application.server.controller.dto.flight.CustomFlightPage;
-import com.triget.application.server.controller.dto.flight.FlightResponse;
-import com.triget.application.server.controller.dto.flight.FlightSegmentResponse;
+import com.triget.application.server.entity.flight.FlightLegResponse;
+import com.triget.application.server.entity.flight.CustomFlightPage;
+import com.triget.application.server.entity.flight.FlightResponse;
+import com.triget.application.server.entity.flight.FlightSegmentResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;

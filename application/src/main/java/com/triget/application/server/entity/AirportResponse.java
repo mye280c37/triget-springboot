@@ -1,4 +1,4 @@
-package com.triget.application.server.controller.dto;
+package com.triget.application.server.entity;
 
 import com.triget.application.server.domain.airport.Airport;
 import lombok.Builder;

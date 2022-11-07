@@ -1,4 +1,4 @@
-package com.triget.application.server.controller.dto;
+package com.triget.application.server.entity.flight;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -8,14 +8,14 @@ import java.util.List;
 
 @Getter
 @RequiredArgsConstructor
-public class CustomProductPage {
-    private List<ProductResponse> content;
+public class CustomFlightPage {
+    private List<FlightResponse> content;
     private Boolean last;
     private int numberOfElements;
     private Boolean empty;
 
     @Builder
-    public CustomProductPage(List<ProductResponse> content, Boolean last, int numberOfElements, Boolean empty){
+    public CustomFlightPage(List<FlightResponse> content, Boolean last, int numberOfElements, Boolean empty){
         this.content = content;
         this.last = last;
         this.numberOfElements = numberOfElements;
