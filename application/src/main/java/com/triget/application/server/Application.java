@@ -11,9 +11,10 @@ import org.springframework.boot.context.properties.EnableConfigurationProperties
         "com.triget.application.server.config",
         "com.triget.application.server.controller",
         "com.triget.application.server.domain",
+        "com.triget.application.server.entity",
         "com.triget.application.server.oauth",
-        "com.triget.application.server.service",
         "com.triget.application.server.repository",
+        "com.triget.application.server.service",
         "com.triget.application.server.utils",
 })
 @EnableConfigurationProperties({
