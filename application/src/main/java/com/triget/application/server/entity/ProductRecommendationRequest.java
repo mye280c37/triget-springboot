@@ -4,12 +4,14 @@ import com.triget.application.server.domain.journey.Journey;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
+import lombok.Data;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 
+@Data
 @ApiModel(value = "여행 스펙 정보", description = "상품 추천을 위해 필요한 사용자의 여행 정보")
 public class ProductRecommendationRequest {
 
