@@ -185,8 +185,8 @@ public class ScheduleService {
             vertices.add(new ProductResponse(attraction));
         }
         Accommodation accommodation = getNextAccommodation(
-                vertices.get(vertices.size()-1).getLatitude(),
-                vertices.get(vertices.size()-1).getLongitude(),
+                vertices.size()==0? airport.getLatitude(): vertices.get(vertices.size()-1).getLatitude() ,
+                vertices.size() == 0? airport.getLongitude(): vertices.get(vertices.size()-1).getLongitude(),
                 result.getAccommodations(),
                 visited.getAccommodations()
         );
@@ -214,8 +214,8 @@ public class ScheduleService {
             vertices.add(new ProductResponse(attraction));
         }
         Accommodation accommodation = getNextAccommodation(
-                vertices.get(vertices.size()-1).getLatitude(),
-                vertices.get(vertices.size()-1).getLongitude(),
+                vertices.size()==0? startPoint.getLatitude(): vertices.get(vertices.size()-1).getLatitude() ,
+                vertices.size() == 0? startPoint.getLongitude(): vertices.get(vertices.size()-1).getLongitude(),
                 result.getAccommodations(),
                 visited.getAccommodations()
         );
