@@ -78,7 +78,7 @@ public class ProductRecommendationService {
                 .accommodationsBudget(accommodationsBudget)
                 .restaurantsBudget(restaurantsBudget)
                 .attractionsBudget(attractionsBudget)
-                .flights(null)
+                .flights(mapFlightPageResponseDto(flightService.getFlightPage(journeyId, flightsBudget, 0)))
                 .accommodations(mapAccommodationPageResponseDto(productService.getAccommodationPage(placeSearchName, theme, accommodationsBudget, 0)))
                 .restaurants(mapRestaurantPageResponseDto(productService.getRestaurantPage(placeSearchName, theme, 0)))
                 .attractions(mapAttractionPageResponseDto(productService.getAttractionPage(placeSearchName, theme, 0)))

@@ -25,7 +25,7 @@ public class ProductRecommendationResponse {
     @Builder
     public ProductRecommendationResponse(String journeyId, float flightsBudget, float accommodationsBudget,
                                          float restaurantsBudget, float attractionsBudget,
-                                         @Nullable CustomFlightPage flights, CustomProductPage accommodations,
+                                         CustomFlightPage flights, CustomProductPage accommodations,
                                          CustomProductPage restaurants, CustomProductPage attractions)
     {
         this.journeyId = journeyId;
@@ -33,13 +33,7 @@ public class ProductRecommendationResponse {
         this.accommodationsBudget = accommodationsBudget;
         this.restaurantsBudget = restaurantsBudget;
         this.attractionsBudget = attractionsBudget;
-        //this.flights = flights;
-        this.flights = CustomFlightPage.builder()
-                .content(new ArrayList<FlightResponse>())
-                .last(true)
-                .numberOfElements(0)
-                .empty(true)
-                .build();
+        this.flights = flights;
         this.accommodations = accommodations;
         this.restaurants = restaurants;
         this.attractions = attractions;
