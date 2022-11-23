@@ -170,7 +170,7 @@ public class ProductRecommendationService {
 
     public CustomProductPage mapRestaurantPageResponseDto(Page<Restaurant> restaurantPage, float restaurantBudget) {
         return CustomProductPage.builder()
-                .content(restaurantPage.getContent().stream().map(restaurant -> new ProductResponse(restaurant, restaurantBudget)).toList())
+                .content(restaurantPage.getContent().stream().map(ProductResponse::new).toList())
                 .numberOfElements(restaurantPage.getNumberOfElements())
                 .last(restaurantPage.isLast())
                 .empty(restaurantPage.isEmpty())
