@@ -80,7 +80,7 @@ public class ProductRecommendationService {
                 .attractionsBudget(attractionsBudget)
                 .flights(mapFlightPageResponseDto(flightService.getFlightPage(journeyId, flightsBudget, 0)))
                 .accommodations(mapAccommodationPageResponseDto(productService.getAccommodationPage(placeSearchName, theme, accommodationsBudget, 0)))
-                .restaurants(mapRestaurantPageResponseDto(productService.getRestaurantPage(placeSearchName, theme, 0)))
+                .restaurants(mapRestaurantPageResponseDto(productService.getRestaurantPage(placeSearchName, theme, 0), restaurantsBudget))
                 .attractions(mapAttractionPageResponseDto(productService.getAttractionPage(placeSearchName, theme, 0)))
                 .build();
     }
@@ -103,7 +103,7 @@ public class ProductRecommendationService {
         Journey journey = journeyService.findById(journeyId);
         String placeSearchName = placeService.getSearchName(journey.getPlace());
         String theme = journey.getTheme();
-        return mapRestaurantPageResponseDto(productService.getRestaurantPage(placeSearchName, theme, page));
+        return mapRestaurantPageResponseDto(productService.getRestaurantPage(placeSearchName, theme, page), journey.getRestaurantsBudget());
     }
 
     public CustomProductPage findAttractions(String journeyId, int page) {
@@ -168,9 +168,9 @@ public class ProductRecommendationService {
                 .build();
     }
 
-    public CustomProductPage mapRestaurantPageResponseDto(Page<Restaurant> restaurantPage) {
+    public CustomProductPage mapRestaurantPageResponseDto(Page<Restaurant> restaurantPage, float restaurantBudget) {
         return CustomProductPage.builder()
-                .content(restaurantPage.getContent().stream().map(ProductResponse::new).toList())
+                .content(restaurantPage.getContent().stream().map(restaurant -> new ProductResponse(restaurant, restaurantBudget)).toList())
                 .numberOfElements(restaurantPage.getNumberOfElements())
                 .last(restaurantPage.isLast())
                 .empty(restaurantPage.isEmpty())

@@ -86,6 +86,27 @@ public class ProductResponse {
         this.keywords = accommodation.getKeywords();
     }
 
+    public ProductResponse(Restaurant restaurant, float restaurantBudget) {
+        this.id = restaurant.get_id().toString();
+        this.name = restaurant.getName();
+        this.thumbnail = restaurant.getThumbnail();
+        this.subcategory = restaurant.getSubcategory();
+        this.longitude = restaurant.getLongitude();
+        this.latitude = restaurant.getLatitude();
+        this.city = restaurant.getCity();
+        this.state = restaurant.getState();
+        this.country = restaurant.getCountry();
+        this.address = restaurant.getAddress();
+        this.price = (float) (restaurant.getPrice()/5.0*restaurantBudget);
+        this.currencyCode = restaurant.getCurrencyCode();
+        this.rating = restaurant.getRating();
+        this.popularity = restaurant.getPopularity();
+        this.detailUrl = restaurant.getDetailUrl();
+        this.productWebsite = restaurant.getProductWebsite();
+        this.weekdayHours = restaurant.getWeekdayHours();
+        this.keywords = restaurant.getKeywords();
+    }
+
     public ProductResponse(Restaurant restaurant) {
         this.id = restaurant.get_id().toString();
         this.name = restaurant.getName();
